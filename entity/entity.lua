@@ -1,3 +1,5 @@
+local class = require "treagine.lib.30log"
+
 local Entity = class("Entity")
 
 function Entity:init()

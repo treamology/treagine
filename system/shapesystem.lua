@@ -1,3 +1,6 @@
+local class = require "treagine.lib.30log"
+local tiny = require "treagine.lib.tiny"
+
 local ShapeSystem = tiny.processingSystem(class("ShapeSystem"))
 
 function ShapeSystem:init()

@@ -1,3 +1,6 @@
+local class = require "treagine.lib.30log"
+local tiny = require "treagine.lib.tiny"
+
 local Screen = class("Screen")
 
 function Screen:init()

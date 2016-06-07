@@ -1,3 +1,6 @@
+local class = require "treagine.lib.30log"
+local beholder = require "treagine.lib.beholder"
+
 local DebugDrawSystem = class("DebugDrawSystem")
 
 function DebugDrawSystem:init()

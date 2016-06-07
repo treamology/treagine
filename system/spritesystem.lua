@@ -1,4 +1,6 @@
-local mathutils = require "src.utils.mathutils"
+local class = require "treagine.lib.30log"
+local tiny = require "treagine.lib.tiny"
+local mathutils = require "treagine.util.mathutils"
 
 local SpriteSystem = tiny.sortedProcessingSystem(class("SpriteSystem"))
 
