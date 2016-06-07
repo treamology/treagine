@@ -1,5 +1,5 @@
 local mathutils = require "treagine.util.mathutils"
-local tiny = require "treagine.util.tiny"
+local tiny = require "treagine.lib.tiny"
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
 
