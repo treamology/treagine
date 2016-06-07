@@ -1,6 +1,7 @@
 local class = require "treagine.lib.30log"
 
 local FillViewport = require "treagine.render.fillviewport"
+local DebugDrawSystem = require "treagine.system.debugdrawsystem"
 
 local GameManager = class("GameManager")
 
@@ -8,6 +9,7 @@ local GameManager = class("GameManager")
 function GameManager:init()
 	self.currentScreen = nil
 	self.viewport = nil
+	self.debugDraw = DebugDrawSystem()
 end
 
 function GameManager:load()
@@ -16,6 +18,7 @@ end
 
 function GameManager:update(dt)
 	self.currentScreen.update(dt)
+	self.debugDraw:draw()
 end
 
 function GameManager:resize()
