@@ -2,19 +2,19 @@ local class = require "treagine.lib.30log"
 local tiny = require "treagine.lib.tiny"
 local mathutils = require "treagine.util.mathutils"
 
-local SpriteSystem = tiny.sortedProcessingSystem(class("SpriteSystem"))
+local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
-function SpriteSystem:init()
+function RenderSystem:init()
 	self.filter = tiny.requireAny("color",
 								  tiny.requireAll("position", "size",
 								  				  tiny.requireAny("image", "currentAnimation")))
 end
 
-function SpriteSystem:preProcess(dt)
+function RenderSystem:preProcess(dt)
 	mainCamera:attach()
 end
 
-function SpriteSystem:process(e, dt)
+function RenderSystem:process(e, dt)
 	love.graphics.setColor(e.color or 255, 255, 255, 255)
 	if e.currentAnimation then
 		e.currentAnimation:update(dt)
@@ -24,15 +24,15 @@ function SpriteSystem:process(e, dt)
 	end
 end
 
-function SpriteSystem:postProcess(dt)
+function RenderSystem:postProcess(dt)
 	mainCamera:detach()
 end
 
-function SpriteSystem:compare(e1, e2)
+function RenderSystem:compare(e1, e2)
 	e1z = e1.zPos or 0
 	e2z = e2.zPos or 0
 
 	return e1z < e2z
 end
 
-return SpriteSystem
+return RenderSystem
