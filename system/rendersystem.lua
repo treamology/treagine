@@ -4,14 +4,20 @@ local mathutils = require "treagine.util.mathutils"
 
 local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
-function RenderSystem:init()
+function RenderSystem:init(screen)
 	self.filter = tiny.requireAny("color",
 								  tiny.requireAll("position", "size",
 								  				  tiny.requireAny("image", "currentAnimation")))
+
+	self.screen = screen
 end
 
 function RenderSystem:preProcess(dt)
-	mainCamera:attach()
+	love.graphics.setCanvas(self.screen.canvas)
+	love.graphics.clear()
+	love.graphics.setBlendMode("alpha")
+
+	self.screen.camera:attach()
 end
 
 function RenderSystem:process(e, dt)
@@ -25,7 +31,13 @@ function RenderSystem:process(e, dt)
 end
 
 function RenderSystem:postProcess(dt)
-	mainCamera:detach()
+	self.screen.camera:detach()
+
+	love.graphics.setCanvas()
+	love.graphics.setBlendMode("alpha", "premultiplied")
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.draw(self.screen.canvas, self.screen.viewport.position.x, self.screen.viewport.position.y, 0,
+		self.screen.viewport.size.x / self.screen.canvas:getWidth(), self.screen.viewport.size.y / self.screen.canvas:getHeight())
 end
 
 function RenderSystem:compare(e1, e2)

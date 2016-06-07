@@ -5,10 +5,13 @@ local math = require "treagine.util.mathutils"
 
 local FillViewport = class("FillViewport")
 
-function FillViewport:init()
+function FillViewport:init(targetWidth, targetHeight)
 	self.position = vector(0, 0)
-	self.size = vector(TARGET_WIDTH, TARGET_HEIGHT)
+	self.size = vector(targetWidth, targetHeight)
 	self.scale = 1
+
+	self.targetWidth = targetWidth
+	self.targetHeight = targetHeight
 end
 
 function FillViewport:recalculate()
@@ -18,8 +21,8 @@ function FillViewport:recalculate()
 
 	-- the target size of the game is 1280 x 720, so it'll just
 	-- fit itself accordingly for different screen sizes
-	local sourceWidth = TARGET_WIDTH
-	local sourceHeight = TARGET_HEIGHT
+	local sourceWidth = self.targetWidth
+	local sourceHeight = self.targetHeight
 	local targetWidth = love.graphics.getWidth()
 	local targetHeight = love.graphics.getHeight()
 
@@ -41,14 +44,22 @@ end
 function FillViewport:unproject(position)
 	position = position - self.position
 	position = position / SCALE_FACTOR / self.scale
-	position.x, position.y = mainCamera:worldCoords(position.x, position.y)
+	
+	if self.camera then
+		position.x, position.y = self.camera:worldCoords(position.x, position.y)
+	end
+
 	return position
 end
 
 function FillViewport:project(position)
-	position.x, position.y = mainCamera:cameraCoords(position.x, position.y)
+	if self.camera then
+		position.x, position.y = self.camera:cameraCoords(position.x, position.y)
+	end
+
 	position = position * SCALE_FACTOR * self.scale
 	position = position + self.position
+	
 	return position
 end
 

@@ -9,15 +9,17 @@ local GameManager = class("GameManager")
 function GameManager:init()
 	self.currentScreen = nil
 	self.viewport = nil
+
 	self.debugDraw = DebugDrawSystem()
+	self.debugDraw.drawFPS = true
 end
 
 function GameManager:load()
-	self:setViewport(FillViewport())
+	self:setViewport(FillViewport(love.graphics.getWidth(), love.graphics.getHeight()))
 end
 
 function GameManager:update(dt)
-	self.currentScreen.update(dt)
+	self.currentScreen:update(dt)
 	self.debugDraw:draw()
 end
 
