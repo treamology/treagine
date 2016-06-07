@@ -1,27 +1,8 @@
--- Copyright (c) 2012 Kyle Conroy
-
--- Permission is hereby granted, free of charge, to any person obtaining a copy
--- of this software and associated documentation files (the "Software"), to deal
--- in the Software without restriction, including without limitation the rights
--- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
--- copies of the Software, and to permit persons to whom the Software is
--- furnished to do so, subject to the following conditions:
-
--- The above copyright notice and this permission notice shall be included in all
--- copies or substantial portions of the Software.
-
--- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
--- SOFTWARE.
-
-
 local machine = {}
 machine.__index = machine
 
+local NONE = "none"
+local ASYNC = "async"
 
 local function call_handler(handler, params)
   if handler then
@@ -30,29 +11,62 @@ local function call_handler(handler, params)
 end
 
 local function create_transition(name)
-  return function(self, ...)
-    local can, to = self:can(name)
+  local can, to, from, params
 
-    if can then
-      local from = self.current
-      local params = { self, name, from, to, ... }
+  local function transition(self, ...)
+    if self.asyncState == NONE then
+      can, to = self:can(name)
+      from = self.current
+      params = { self, name, from, to, ...}
 
-      if call_handler(self["onbefore" .. name], params) == false
-      or call_handler(self["onleave" .. from], params) == false then
+      if not can then return false end
+      self.currentTransitioningEvent = name
+
+      local beforeReturn = call_handler(self["onbefore" .. name], params)
+      local leaveReturn = call_handler(self["onleave" .. from], params)
+
+      if beforeReturn == false or leaveReturn == false then
         return false
       end
 
+      self.asyncState = name .. "WaitingOnLeave"
+
+      if leaveReturn ~= ASYNC then
+        transition(self, ...)
+      end
+      
+      return true
+    elseif self.asyncState == name .. "WaitingOnLeave" then
       self.current = to
 
-      call_handler(self["onenter" .. to] or self["on" .. to], params)
+      local enterReturn = call_handler(self["onenter" .. to] or self["on" .. to], params)
+
+      self.asyncState = name .. "WaitingOnEnter"
+
+      if enterReturn ~= ASYNC then
+        transition(self, ...)
+      end
+      
+      return true
+    elseif self.asyncState == name .. "WaitingOnEnter" then
       call_handler(self["onafter" .. name] or self["on" .. name], params)
       call_handler(self["onstatechange"], params)
-
+      self.asyncState = NONE
+      self.currentTransitioningEvent = nil
       return true
+    else
+    	if string.find(self.asyncState, "WaitingOnLeave") or string.find(self.asyncState, "WaitingOnEnter") then
+    		self.asyncState = NONE
+    		transition(self, ...)
+    		return true
+    	end
     end
 
+    self.currentTransitioningEvent = nil
     return false
   end
+
+  return transition
 end
 
 local function add_to_map(map, event)
@@ -73,6 +87,7 @@ function machine.create(options)
 
   fsm.options = options
   fsm.current = options.initial or 'none'
+  fsm.asyncState = NONE
   fsm.events = {}
 
   for _, event in ipairs(options.events or {}) do
@@ -122,5 +137,20 @@ function machine:todot(filename)
   dotfile:close()
 end
 
+function machine:transition(event)
+  if self.currentTransitioningEvent == event then
+    return self[self.currentTransitioningEvent](self)
+  end
+end
+
+function machine:cancelTransition(event)
+  if self.currentTransitioningEvent == event then
+    self.asyncState = NONE
+    self.currentTransitioningEvent = nil
+  end
+end
+
+machine.NONE = NONE
+machine.ASYNC = ASYNC
 
 return machine

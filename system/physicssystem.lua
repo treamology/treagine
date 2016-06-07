@@ -2,6 +2,8 @@ local mathutils = require "treagine.util.mathutils"
 local tiny = require "treagine.lib.tiny"
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
+local bump = require "treagine.lib.bump"
+local vector = require "treagine.lib.vector"
 
 local PhysicsSystem = tiny.system(class("PhysicsSystem"))
 

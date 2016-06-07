@@ -1,5 +1,6 @@
 local class = require "treagine.lib.30log"
 local math = require "treagine.util.mathutils"
+local vector = require "treagine.lib.vector"
 
 local Viewport = class("Viewport")
 
