@@ -1,16 +1,17 @@
 local class = require "treagine.lib.30log"
-local math = require "treagine.util.mathutils"
 local vector = require "treagine.lib.vector"
 
-local Viewport = class("Viewport")
+local math = require "treagine.util.mathutils"
 
-function Viewport:init()
+local FillViewport = class("FillViewport")
+
+function FillViewport:init()
 	self.position = vector(0, 0)
 	self.size = vector(TARGET_WIDTH, TARGET_HEIGHT)
 	self.scale = 1
 end
 
-function Viewport:recalculate()
+function FillViewport:recalculate()
 	-- scales the viewport so that it always fills the screen
 	-- (some parts of the viewport may be cut off at times)
 	-- must be called at least once before the game begins
@@ -37,18 +38,18 @@ function Viewport:recalculate()
 	self.position.y = (targetHeight - self.size.y) / 2
 end
 
-function Viewport:unproject(position)
+function FillViewport:unproject(position)
 	position = position - self.position
 	position = position / SCALE_FACTOR / self.scale
 	position.x, position.y = mainCamera:worldCoords(position.x, position.y)
 	return position
 end
 
-function Viewport:project(position)
+function FillViewport:project(position)
 	position.x, position.y = mainCamera:cameraCoords(position.x, position.y)
 	position = position * SCALE_FACTOR * self.scale
 	position = position + self.position
 	return position
 end
 
-return Viewport
+return FillViewport
