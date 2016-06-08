@@ -20,12 +20,12 @@ end
 function SettingsProcessor.loadSettings()
 	if love.filesystem.isFile(fileName) then
 		local settingsJSON = love.filesystem.read(fileName)
-		loadedSettings = json:decode(settingsJSON)
+		SettingsProcessor.loadedSettings = json:decode(settingsJSON)
 	end
 end
 
 function SettingsProcessor.saveSettings(settings)
-	local saveSettings = settings or loadedSettings
+	local saveSettings = settings or SettingsProcessor.loadedSettings
 	local settingsJSON = json:encode_pretty(saveSettings)
 
 	love.filesystem.write(fileName, settingsJSON)

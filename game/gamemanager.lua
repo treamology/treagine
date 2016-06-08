@@ -7,7 +7,7 @@ local GameManager = class("GameManager")
 
 -- callbacks
 function GameManager:init(name)
-	self.name = name or "Game"
+	self.gameName = name or "Game"
 
 	self.currentScreen = nil
 	self.viewport = nil
