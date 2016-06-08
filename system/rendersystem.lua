@@ -22,6 +22,7 @@ end
 
 function RenderSystem:process(e, dt)
 	love.graphics.setColor(e.color or 255, 255, 255, 255)
+	
 	if e.currentAnimation then
 		e.currentAnimation:update(dt)
 		e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
