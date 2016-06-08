@@ -24,7 +24,7 @@ function GameManager:update(dt)
 end
 
 function GameManager:resize()
-	if self.viewport then self.viewport:resize() end
+	if self.viewport then self.viewport:recalculate() end
 end
 ---------------
 
