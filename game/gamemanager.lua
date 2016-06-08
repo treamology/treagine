@@ -6,7 +6,9 @@ local DebugDrawSystem = require "treagine.system.debugdrawsystem"
 local GameManager = class("GameManager")
 
 -- callbacks
-function GameManager:init()
+function GameManager:init(name)
+	self.name = name or "Game"
+
 	self.currentScreen = nil
 	self.viewport = nil
 
