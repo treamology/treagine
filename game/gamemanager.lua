@@ -17,7 +17,7 @@ function GameManager:init(name)
 end
 
 function GameManager:load()
-	self:setViewport(FillViewport(love.graphics.getWidth(), love.graphics.getHeight()))
+	self:setViewport(FillViewport())
 end
 
 function GameManager:update(dt)

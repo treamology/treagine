@@ -2,16 +2,16 @@ local class = require "treagine.lib.30log"
 local vector = require "treagine.lib.vector"
 
 local math = require "treagine.util.mathutils"
+local rsettings = require "treagine.render.rendersettings"
 
 local FillViewport = class("FillViewport")
 
-function FillViewport:init(targetWidth, targetHeight)
+function FillViewport:init()
 	self.position = vector(0, 0)
 	self.size = vector(targetWidth, targetHeight)
 	self.scale = 1
 
-	self.targetWidth = targetWidth
-	self.targetHeight = targetHeight
+	return self
 end
 
 function FillViewport:recalculate()
@@ -21,8 +21,8 @@ function FillViewport:recalculate()
 
 	-- the target size of the game is 1280 x 720, so it'll just
 	-- fit itself accordingly for different screen sizes
-	local sourceWidth = self.targetWidth
-	local sourceHeight = self.targetHeight
+	local sourceWidth = rsettings.targetWidth
+	local sourceHeight = rsettings.targetHeight
 	local targetWidth = love.graphics.getWidth()
 	local targetHeight = love.graphics.getHeight()
 
@@ -43,7 +43,7 @@ end
 
 function FillViewport:unproject(position)
 	position = position - self.position
-	position = position / SCALE_FACTOR / self.scale
+	position = position / rsettings.scaleFactor / self.scale
 	
 	if self.camera then
 		position.x, position.y = self.camera:worldCoords(position.x, position.y)
