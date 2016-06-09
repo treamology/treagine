@@ -5,9 +5,7 @@ local mathutils = require "treagine.util.mathutils"
 local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
 function RenderSystem:init(screen)
-	self.filter = tiny.requireAny("color",
-								  tiny.requireAll("position", "size",
-								  				  tiny.requireAny("image", "currentAnimation")))
+	self.filter = tiny.requireAll("position", "size", "image")
 
 	self.screen = screen
 end
