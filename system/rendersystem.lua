@@ -21,14 +21,19 @@ end
 function RenderSystem:process(e, dt)
 	love.graphics.setColor(e.color or 255, 255, 255, 255)
 	
+	if e.shader then
+		love.graphics.setShader(e.shader)
+	else
+		love.graphics.setShader()
+	end
+
 	if e.currentAnimation then
 		e.currentAnimation:update(dt)
 		e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
 	elseif e.image then
 		love.graphics.draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
 	else
-		local posX, posY = e.position:unpack()
-		love.graphics.rectangle(e.drawMode, posX, posY, e.size:unpack())
+		love.graphics.rectangle(e.drawMode, e.position.x, e.position.y, e.size:unpack())
 	end
 end
 
