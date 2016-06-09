@@ -22,6 +22,11 @@ function RenderSystem:process(e, dt)
 	love.graphics.setColor(e.color or 255, 255, 255, 255)
 	
 	if e.shader then
+		if e.shaderExterns then
+			for k, v in pairs(e.shaderExterns) do
+				e.shader:send(k, v)
+			end
+		end
 		love.graphics.setShader(e.shader)
 	else
 		love.graphics.setShader()
