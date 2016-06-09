@@ -5,7 +5,7 @@ local mathutils = require "treagine.util.mathutils"
 local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
 function RenderSystem:init(screen)
-	self.filter = tiny.requireAll("position", "size", "image")
+	self.filter = tiny.requireAll("position", "size", tiny.requireAny("image", "drawMode"))
 
 	self.screen = screen
 end
@@ -24,8 +24,11 @@ function RenderSystem:process(e, dt)
 	if e.currentAnimation then
 		e.currentAnimation:update(dt)
 		e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
-	else
+	elseif e.image then
 		love.graphics.draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
+	else
+		local posX, posY = e.position:unpack()
+		love.graphics.rectangle(e.drawMode, posX, posY, e.size:unpack())
 	end
 end
 
