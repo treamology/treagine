@@ -32,11 +32,17 @@ function RenderSystem:process(e, dt)
 		love.graphics.setShader()
 	end
 
-	if e.currentAnimation then
-		e.currentAnimation:update(dt)
-		e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
-	elseif e.image then
-		love.graphics.draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
+	if e.image then
+		local xSize, ySize = e.size:unpack()
+		local xScale = xSize / e.image:getWidth()
+		local yScale = ySize / e.image:getHeight()
+
+		if e.currentAnimation then
+			e.currentAnimation:update(dt)
+			e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
+		else
+			love.graphics.draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y), 0, xScale, yScale)
+		end
 	else
 		love.graphics.rectangle(e.drawMode, e.position.x, e.position.y, e.size:unpack())
 	end

@@ -12,6 +12,7 @@ end
 
 function DebugDrawSystem:draw()
 	love.graphics.setBlendMode("alpha")
+	love.graphics.setShader()
 
 	if self.drawFPS then
 		local r, g, b, a = love.graphics.getBackgroundColor()
