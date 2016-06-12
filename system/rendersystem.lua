@@ -54,6 +54,7 @@ function RenderSystem:postProcess(dt)
 	love.graphics.setCanvas()
 	love.graphics.setBlendMode("alpha", "premultiplied")
 	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.setShader()
 	love.graphics.draw(self.screen.canvas, self.screen.viewport.position.x, self.screen.viewport.position.y, 0,
 		self.screen.viewport.size.x / self.screen.canvas:getWidth(), self.screen.viewport.size.y / self.screen.canvas:getHeight())
 end
