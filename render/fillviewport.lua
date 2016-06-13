@@ -8,7 +8,7 @@ local FillViewport = class("FillViewport")
 
 function FillViewport:init()
 	self.position = vector(0, 0)
-	self.size = vector(targetWidth, targetHeight)
+	self.size = vector(rsettings.targetWidth, rsettings.targetHeight)
 	self.scale = 1
 
 	return self
