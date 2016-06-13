@@ -21,7 +21,7 @@ function GameManager:load()
 end
 
 function GameManager:update(dt)
-	self.currentScreen:update(dt)
+	if self.currentScreen then self.currentScreen:update(dt) end
 	self.debugDraw:draw()
 end
 
