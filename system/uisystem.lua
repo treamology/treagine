@@ -4,12 +4,12 @@ local vector = require "treagine.lib.vector"
 
 local UISystem = tiny.system(class("UISystem"))
 
-local rootNode = { absolutePosition = vector(0, 0), children = {} }
-
 function UISystem(screen)
 	self.screen = screen
 
 	self.filter = tiny.requireAll("anchorPoint", "parent", "position", "size")
+
+	self.rootNode = { absolutePosition = vector(0, 0), children = {} }
 end
 
 function UISystem:onAdd(e)
@@ -40,7 +40,7 @@ function UISystem:update(e)
 		end
 	end
 
-	traverseNode(rootNode)
+	traverseNode(self.rootNode)
 end
 
 function UISystem:onRemove(e)
@@ -53,7 +53,5 @@ function UISystem:onRemove(e)
 		end
 	end
 end
-
-UISystem.rootNode = rootNode
 
 return UISystem
