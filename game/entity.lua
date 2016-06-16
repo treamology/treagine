@@ -5,7 +5,9 @@ local Entity = class("Entity")
 
 function Entity:init()
 	self.position = vector(0, 0)
-	self.size = vector(0, 0)
+	self.scale = vector(1, 1)
+	self.rotation = 0 -- in radians
+	self.anchor = vector(0, 0)
 end
 
 function Entity:getCenter()
