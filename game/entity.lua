@@ -1,4 +1,5 @@
 local class = require "treagine.lib.30log"
+local vector = require "treagine.lib.vector"
 
 local Entity = class("Entity")
 
