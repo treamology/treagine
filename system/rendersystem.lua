@@ -8,17 +8,10 @@ function RenderSystem:init(screen)
 	self.filter = tiny.requireAll("position", "size", tiny.requireAny("image", "drawMode"))
 
 	self.screen = screen
+	self.uiSystem = screen:getSystemByName("UISystem")
 end
 
-function RenderSystem:preProcess(dt)
-	love.graphics.setCanvas(self.screen.canvas)
-	love.graphics.clear()
-	love.graphics.setBlendMode("alpha")
-
-	self.screen.camera:attach()
-end
-
-function RenderSystem:process(e, dt)
+function RenderSystem:drawEntity(e, position, dt)
 	love.graphics.setColor(e.color or 255, 255, 255, 255)
 	
 	if e.shader then
@@ -39,17 +32,53 @@ function RenderSystem:process(e, dt)
 
 		if e.currentAnimation then
 			e.currentAnimation:update(dt)
-			e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
+			e.currentAnimation:draw(e.image, mathutils.round(position.x), mathutils.round(position.y))
 		else
-			love.graphics.draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y), 0, xScale, yScale)
+			love.graphics.draw(e.image, mathutils.round(position.x), mathutils.round(position.y), 0, xScale, yScale)
 		end
 	else
-		love.graphics.rectangle(e.drawMode, e.position.x, e.position.y, e.size:unpack())
+		love.graphics.rectangle(e.drawMode, position.x, position.y, e.size:unpack())
 	end
+end
+
+function RenderSystem:preProcess(dt)
+	love.graphics.setCanvas(self.screen.canvas)
+	love.graphics.clear()
+	love.graphics.setBlendMode("alpha")
+
+	self.screen.camera:attach()
+end
+
+function RenderSystem:process(e, dt)
+	-- UI gets rendered later
+	if e.parent then return end
+
+	self:drawEntity(e, e.position, dt)
+
+	-- if e.image then
+	-- 	local xSize, ySize = e.size:unpack()
+	-- 	local xScale = xSize / e.image:getWidth()
+	-- 	local yScale = ySize / e.image:getHeight()
+
+	-- 	if e.currentAnimation then
+	-- 		e.currentAnimation:update(dt)
+	-- 		e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
+	-- 	else
+	-- 		love.graphics.draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y), 0, xScale, yScale)
+	-- 	end
+	-- else
+	-- 	love.graphics.rectangle(e.drawMode, e.position.x, e.position.y, e.size:unpack())
+	-- end
 end
 
 function RenderSystem:postProcess(dt)
 	self.screen.camera:detach()
+
+	if self.uiSystem then
+		for _, node in ipairs(self.uiSystem.entities) do
+			self:drawEntity(node, node.absolutePosition, dt)
+		end
+	end
 
 	love.graphics.setCanvas()
 	love.graphics.setBlendMode("alpha", "premultiplied")

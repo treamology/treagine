@@ -4,7 +4,7 @@ local vector = require "treagine.lib.vector"
 
 local UISystem = tiny.system(class("UISystem"))
 
-function UISystem(screen)
+function UISystem:init(screen)
 	self.screen = screen
 
 	self.filter = tiny.requireAll("anchorPoint", "parent", "position", "size")
@@ -21,11 +21,11 @@ end
 function UISystem:update(e)
 	local function traverseNode(node)
 		for _, child in ipairs(node.children) do
-			local anchorOffsetX = node.size.x * node.anchorPoint.x
-			local anchorOffsetY = node.size.y * node.anchorPoint.y
+			local anchorOffsetX = child.size.x * child.anchorPoint.x
+			local anchorOffsetY = child.size.y * child.anchorPoint.y
 
-			local absX = node.absolutePosition.x + child.position.x + anchorOffsetX
-			local absY = node.absolutePosition.y + child.position.y + anchorOffsetY
+			local absX = node.absolutePosition.x + child.position.x - anchorOffsetX
+			local absY = node.absolutePosition.y + child.position.y - anchorOffsetY
 
 			if child.absolutePosition ~= nil then
 				child.absolutePosition.x = absX
