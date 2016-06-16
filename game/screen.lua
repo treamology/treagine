@@ -32,4 +32,12 @@ function Screen:update()
 	tiny.update(self.world, love.timer.getDelta() * TIME_SCALE)
 end
 
+function Screen:getSystemByName(name)
+	for _, system in ipairs(self.world.systems) do
+		if system.name == name then
+			return system
+		end
+	end
+end
+
 return Screen
