@@ -5,7 +5,7 @@ local mathutils = require "treagine.util.mathutils"
 local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
 function RenderSystem:init(screen)
-	self.filter = tiny.requireAll("position", "size", tiny.requireAny("image", "drawMode"))
+	self.filter = tiny.requireAll("position", "size", tiny.requireAny("image", "drawMode", "text"))
 
 	self.screen = screen
 	self.uiSystem = screen:getSystemByName("UISystem")
@@ -36,8 +36,15 @@ function RenderSystem:drawEntity(e, position, dt)
 		else
 			love.graphics.draw(e.image, mathutils.round(position.x), mathutils.round(position.y), 0, xScale, yScale)
 		end
-	else
+	elseif e.drawMode then
 		love.graphics.rectangle(e.drawMode, position.x, position.y, e.size:unpack())
+	elseif e.text then
+		if e.font then
+			love.graphics.setFont(e.font)
+		else
+			love.graphics.setNewFont(12)
+		end
+		love.graphics.print(e.text, position.x, position.y)
 	end
 end
 
@@ -54,21 +61,6 @@ function RenderSystem:process(e, dt)
 	if e.parent then return end
 
 	self:drawEntity(e, e.position, dt)
-
-	-- if e.image then
-	-- 	local xSize, ySize = e.size:unpack()
-	-- 	local xScale = xSize / e.image:getWidth()
-	-- 	local yScale = ySize / e.image:getHeight()
-
-	-- 	if e.currentAnimation then
-	-- 		e.currentAnimation:update(dt)
-	-- 		e.currentAnimation:draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y))
-	-- 	else
-	-- 		love.graphics.draw(e.image, mathutils.round(e.position.x), mathutils.round(e.position.y), 0, xScale, yScale)
-	-- 	end
-	-- else
-	-- 	love.graphics.rectangle(e.drawMode, e.position.x, e.position.y, e.size:unpack())
-	-- end
 end
 
 function RenderSystem:postProcess(dt)
