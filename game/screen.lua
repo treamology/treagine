@@ -20,6 +20,7 @@ end
 
 function Screen:load()
 	self.world = tiny.world()
+
 	for _, v in ipairs(self.systems) do
 		self.world:addSystem(v(self))
 	end
@@ -33,7 +34,12 @@ function Screen:update()
 end
 
 function Screen:getSystemByName(name)
-	for _, system in ipairs(self.world.systems) do
+	for _, system in pairs(self.world.systems) do
+		if system.name == name then
+			return system
+		end
+	end
+	for _, system in pairs(self.world.systemsToAdd) do
 		if system.name == name then
 			return system
 		end
