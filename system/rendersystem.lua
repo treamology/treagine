@@ -8,7 +8,8 @@ function RenderSystem:init(screen)
 	self.filter = tiny.requireAll("position", "scale", "rotation", "anchor",
 								  tiny.requireAny("image",
 												  tiny.requireAll("drawMode", "size"),
-												  "text"))
+												  "text",
+												  "children"))
 
 	self.screen = screen
 	self.uiSystem = screen:getSystemByName("UISystem")
