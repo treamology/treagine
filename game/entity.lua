@@ -11,31 +11,23 @@ function Entity:init()
 end
 
 function Entity:getCenter()
-	if self.image then
-		local sizeX = self.image:getWidth() * self.scale.x
-		local sizeY = self.image:getHeight() * self.scale.y
-		return self.position + (vector(sizeX, sizeY) / 2)
-	elseif self.size then
-		return self.position + (self.size / 2)
-	end
-	return self.position
+	return self.position + self:getSize() / 2
 end
 
 function Entity:setCenter(x, y)
+	local size = self:getSize()
+	self.position.x = x - (size.x / 2)
+	self.position.y = y - (size.y / 2)
+end
+
+function Entity:getSize()
 	if self.image then
-		local sizeX = self.image:getWidth() * self.scale.x
-		local sizeY = self.image:getHeight() * self.scale.y
-		self.position.x = x - (sizeX / 2)
-		self.position.y = y - (sizeY / 2)
-		return
-	elseif self.size then
-		self.position.x = x - (self.size.x / 2)
-		self.position.y = y - (self.size.y / 2)
-		return
+		local sizeX, sizeY = self.image:getDimensions()
+		local size = vector(sizeX * self.scale.x, sizeY * self.scale.y)
+		return size
 	end
-	
-	self.position.x = x
-	self.position.y = y
+
+	return self.size
 end
 
 return Entity
