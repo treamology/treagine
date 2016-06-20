@@ -21,13 +21,15 @@ function Entity:setCenter(x, y)
 end
 
 function Entity:getSize()
-	if self.image then
+	if self.size then
+		return self.size
+	elseif self.image then
 		local sizeX, sizeY = self.image:getDimensions()
 		local size = vector(sizeX * self.scale.x, sizeY * self.scale.y)
 		return size
 	end
 
-	return self.size
+	print(self.name .. " size was not returned.")
 end
 
 return Entity
