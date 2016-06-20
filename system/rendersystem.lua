@@ -59,7 +59,15 @@ function RenderSystem:process(e, dt)
 	-- UI gets rendered later
 	if e.parent then return end
 
-	self:drawEntity(e, e.position, dt)
+	-- if entity is an entitygroup
+	if e.children then
+		for _, child in ipairs(e.children) do
+			local drawPos = e.position + child.position
+			self:drawEntity(child, drawPos, dt)
+		end
+	else
+		self:drawEntity(e, e.position, dt)
+	end
 end
 
 function RenderSystem:postProcess(dt)
