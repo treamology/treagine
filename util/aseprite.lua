@@ -3,11 +3,20 @@ local anim8 = require "treagine.lib.anim8"
 
 local Aseprite = {}
 
+local animDataCache = {}
 
 function Aseprite.importAnimation(name)
-	-- load up the json and decode it so it can be read like a table
-	local rawJSON = love.filesystem.read("assets/sprites/data/" .. name .. ".json")
-	local animData = json:decode(rawJSON)
+
+	local animData
+	if animDataCache[name] then
+		-- just load what's in the cache
+		animData = animDataCache[name]
+	else
+		-- load up the json and decode it, then cache it
+		local rawJSON = love.filesystem.read("assets/sprites/data/" .. name .. ".json")
+		animData = json:decode(rawJSON)
+		animDataCache[name] = animData
+	end
 
 	-- seperate the frames from their keys and sort them by position in the image.
 	-- this needs to be done because by default the frames are in an arbitrary order in animData
