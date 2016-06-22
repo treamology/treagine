@@ -5,8 +5,7 @@ local animutil = {}
 
 local animDataCache = {}
 
-function animutil.importAnimation(name)
-
+function animutil.importAnimations(name)
 	local animData
 	if animDataCache[name] then
 		-- just load what's in the cache
@@ -18,7 +17,7 @@ function animutil.importAnimation(name)
 		animDataCache[name] = animData
 	end
 
-	-- seperate the frames from their keys and sort them by position in the image.
+	-- separate the frames from their keys and sort them by position in the image.
 	-- this needs to be done because by default the frames are in an arbitrary order in animData
 	local sortedFrames = {}
 	for _, v in pairs(animData.frames) do
