@@ -1,11 +1,11 @@
 local json = require "treagine.lib.JSON"
 local anim8 = require "treagine.lib.anim8"
 
-local Aseprite = {}
+local animutil = {}
 
 local animDataCache = {}
 
-function Aseprite.importAnimation(name)
+function animutil.importAnimation(name)
 
 	local animData
 	if animDataCache[name] then
@@ -65,4 +65,4 @@ function Aseprite.importAnimation(name)
 	return image, animTable
 end
 
-return Aseprite
+return animutil
