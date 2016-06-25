@@ -29,12 +29,18 @@ function RenderSystem:drawEntity(e, position, dt)
 		love.graphics.setShader()
 	end
 
+	local sizeX, sizeY = e:getSize():unpack()
+	local anchorX, anchorY = e.anchor:unpack()
+
+	anchorX = anchorX * sizeX
+	anchorY = anchorY * sizeY
+
 	if e.image then
 		if e.currentAnimation then
 			e.currentAnimation:update(dt)
-			e.currentAnimation:draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, e.anchor.x, e.anchor.y)
+			e.currentAnimation:draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 		else
-			love.graphics.draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, e.anchor.x, e.anchor.y)
+			love.graphics.draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 		end
 	elseif e.drawMode then
 		love.graphics.rectangle(e.drawMode, position.x, position.y, e.size.x, e.size.y)
@@ -44,7 +50,7 @@ function RenderSystem:drawEntity(e, position, dt)
 		else
 			love.graphics.setNewFont(12)
 		end
-		love.graphics.print(e.text, position.x, position.y, e.rotation, e.scale.x, e.scale.y, e.anchor.x, e.anchor.y)
+		love.graphics.print(e.text, position.x, position.y, e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 	end
 end
 
