@@ -57,7 +57,7 @@ function FillViewport:project(position)
 		position.x, position.y = self.camera:cameraCoords(position.x, position.y)
 	end
 
-	position = position * SCALE_FACTOR * self.scale
+	position = position * rsettings.scaleFactor * self.scale
 	position = position + self.position
 	
 	return position
