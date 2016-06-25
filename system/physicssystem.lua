@@ -200,7 +200,7 @@ function PhysicsSystem.getEntityBounds(e)
 		return e.position.x + e.boundingBox.x, e.position.y + e.boundingBox.y, e.boundingBox.width, e.boundingBox.height
 	end
 
-	return e.position.x, e.position.y, e.size.x, e.size.y
+	return e.position.x, e.position.y, e:getSize():unpack()
 end
 
 PhysicsSystem.COLLISION_EVENT = COLLISION_EVENT

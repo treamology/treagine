@@ -1,5 +1,6 @@
 local json = require "treagine.lib.JSON"
 local anim8 = require "treagine.lib.anim8"
+local vector = require "treagine.lib.vector"
 
 local animutil = {}
 
@@ -48,8 +49,9 @@ function animutil.importAnimations(name)
 
 	-- for now, all the frames have to be the same size
 	-- support for multiple grids can be added later.
+	local frameSize = vector(animData.frameData[1].w, animData.frameData[2].h)
 	local image = love.graphics.newImage("assets/sprites/" .. name .. ".png")
-	local grid = anim8.newGrid(animData.frameData[1].w, animData.frameData[2].h, image:getDimensions())
+	local grid = anim8.newGrid(frameSize.x, frameSize.y, image:getDimensions())
 
 	local function createDurations(from, to)
 		local durations = {}
@@ -74,7 +76,7 @@ function animutil.importAnimations(name)
 		animTable[tag.name] = anim8.newAnimation(grid(getCoordinates(tag.from + 1, tag.to + 1)), createDurations(tag.from + 1, tag.to + 1))
 	end
 
-	return image, animTable
+	return image, animTable, frameSize
 end
 
 return animutil
