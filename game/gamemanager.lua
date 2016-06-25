@@ -34,6 +34,7 @@ end
 function GameManager:setViewport(viewport)
 	self.viewport = viewport
 	self.viewport:recalculate()
+	self.debugDraw.viewport = self.viewport
 end
 ---------------
 

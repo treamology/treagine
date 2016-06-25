@@ -1,11 +1,14 @@
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
+local rsettings = require "treagine.render.rendersettings"
 
 local DebugDrawSystem = class("DebugDrawSystem")
 
-function DebugDrawSystem:init()
+function DebugDrawSystem:init(viewport)
 	self.rectList = {}
 	self.drawFPS = false
+
+	self.viewport = viewport
 
 	beholder.observe("debug", "drawRectangle", function(table) self:addRectangle(table) end)
 end
@@ -24,8 +27,8 @@ function DebugDrawSystem:draw()
 			local color = v.color or {255, 0, 255, 255}
 			local mode = v.mode or "line"
 			local pos = v.position:clone() or vector(0, 0)
-			local projPosX, projPosY = mainViewport:project(pos):unpack()
-			v.size = v.size * SCALE_FACTOR * mainViewport.scale
+			local projPosX, projPosY = self.viewport:project(pos):unpack()
+			v.size = v.size * rsettings.scaleFactor * self.viewport.scale
 
 			love.graphics.setColor(color)
 			love.graphics.rectangle(mode, projPosX, projPosY, v.size:unpack())
