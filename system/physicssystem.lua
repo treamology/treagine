@@ -35,7 +35,7 @@ function PhysicsSystem:init()
 end
 
 function PhysicsSystem:onAdd(e)
-	local x, y, width, height = self.getEntityBounds(e)
+	local x, y, width, height = e:getBoundingBox()
 	self.collWorld:add(e, x, y, width, height)
 	self.collisions[e] = {}
 
@@ -193,14 +193,6 @@ function PhysicsSystem.filterCollision(item, other)
 	end
 
 	return collType
-end
-
-function PhysicsSystem.getEntityBounds(e)
-	if e.boundingBox then
-		return e.position.x + e.boundingBox.x, e.position.y + e.boundingBox.y, e.boundingBox.width, e.boundingBox.height
-	end
-
-	return e.position.x, e.position.y, e:getSize():unpack()
 end
 
 PhysicsSystem.COLLISION_EVENT = COLLISION_EVENT

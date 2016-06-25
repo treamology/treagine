@@ -32,4 +32,12 @@ function Entity:getSize()
 	print(self.name .. " size was not returned.")
 end
 
+function Entity:getBoundingBox()
+	if self.boundingBox then
+		return self.position.x + self.boundingBox.x, self.position.y + self.boundingBox.y, self.boundingBox.width, self.boundingBox.height
+	end
+
+	return self.position.x, self.position.y, self:getSize():unpack()
+end
+
 return Entity
