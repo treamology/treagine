@@ -22,7 +22,7 @@ end
 
 function Entity:getSize()
 	if self.size then
-		return self.size
+		return self.size * self.scale
 	elseif self.image then
 		local sizeX, sizeY = self.image:getDimensions()
 		local size = vector(sizeX * self.scale.x, sizeY * self.scale.y)
