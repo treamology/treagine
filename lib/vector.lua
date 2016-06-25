@@ -72,7 +72,8 @@ function vector.__mul(a,b)
 		return new(b*a.x, b*a.y)
 	else
 		assert(isvector(a) and isvector(b), "Mul: wrong argument types (<vector> or <number> expected)")
-		return a.x*b.x + a.y*b.y
+		--return a.x*b.x + a.y*b.y
+		return new(a.x*b.x, a.y*b.y)
 	end
 end
 
