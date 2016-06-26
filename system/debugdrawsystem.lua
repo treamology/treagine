@@ -1,16 +1,19 @@
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
 local rsettings = require "treagine.render.rendersettings"
+local vector = require "treagine.lib.vector"
 
 local DebugDrawSystem = class("DebugDrawSystem")
 
-function DebugDrawSystem:init(viewport)
+function DebugDrawSystem:init(screen)
 	self.rectList = {}
 	self.drawFPS = false
+	self.showEntityBounds = false
 
-	self.viewport = viewport
+	self.screen = screen
 
 	beholder.observe("debug", "drawRectangle", function(table) self:addRectangle(table) end)
+	beholder.observe("debug", "showEntityBounds", function(bool) self.showEntityBounds = bool end)
 end
 
 function DebugDrawSystem:draw()
@@ -21,14 +24,28 @@ function DebugDrawSystem:draw()
 		love.graphics.setColor(255 - r, 255 - g, 255 - b, 255)
 		love.graphics.print(tostring(love.timer.getFPS()) .. " fps", 0, 0)
 	end
+
+	if self.showEntityBounds then
+		local color = {255, 0, 255, 255}
+		local mode = "line"
+
+		love.graphics.setColor(color)
+		for e in pairs(self.screen.world.entities) do
+			local x, y, w, h = e:getBoundingBox()
+			local px, py = self.screen.viewport:project(vector(x, y)):unpack()
+			w = w * rsettings.scaleFactor * self.screen.viewport.scale
+			h = h * rsettings.scaleFactor * self.screen.viewport.scale
+			love.graphics.rectangle(mode, px, py, w, h)
+		end
+	end
 	
 	for k, v in pairs(self.rectList) do
 		if v.size ~= nil and v.position ~= nil then
-			local color = v.color or {255, 0, 255, 255}
+			local color = v.color or {255, 0, 0, 255}
 			local mode = v.mode or "line"
 			local pos = v.position:clone() or vector(0, 0)
-			local projPosX, projPosY = self.viewport:project(pos):unpack()
-			v.size = v.size * rsettings.scaleFactor * self.viewport.scale
+			local projPosX, projPosY = self.screen.viewport:project(pos):unpack()
+			v.size = v.size * rsettings.scaleFactor * self.screen.viewport.scale
 
 			love.graphics.setColor(color)
 			love.graphics.rectangle(mode, projPosX, projPosY, v.size:unpack())
