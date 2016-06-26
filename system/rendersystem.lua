@@ -29,7 +29,7 @@ function RenderSystem:drawEntity(e, position, dt)
 		love.graphics.setShader()
 	end
 
-	local sizeX, sizeY = e:getSize():unpack()
+	local sizeX, sizeY = e:getSize(false):unpack()
 	local anchorX, anchorY = e.anchor:unpack()
 
 	anchorX = anchorX * sizeX

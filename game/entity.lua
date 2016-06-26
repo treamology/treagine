@@ -16,28 +16,39 @@ end
 
 function Entity:setCenter(x, y)
 	local size = self:getSize()
-	self.position.x = x - (size.x / 2)
-	self.position.y = y - (size.y / 2)
+	self.position.x = x - (size.x / 2 - (self.anchor.x * size.x))
+	self.position.y = y - (size.y / 2 - (self.anchor.y * size.y))
 end
 
-function Entity:getSize()
+function Entity:getSize(factorScale)
+	if factorScale == nil then factorScale = true end
+
 	if self.size then
-		return self.size * self.scale
+		if factorScale then
+			return self.size * self.scale
+		else
+			return self.size
+		end
 	elseif self.image then
 		local sizeX, sizeY = self.image:getDimensions()
-		local size = vector(sizeX * self.scale.x, sizeY * self.scale.y)
-		return size
+		if factorScale then
+			return vector(sizeX * self.scale.x, sizeY * self.scale.y)
+		else
+			return vector(sizeX, sizeYs)
+		end
 	end
 
 	print(self.name .. " size was not returned.")
 end
 
 function Entity:getBoundingBox()
+	local size = self:getSize()
+
 	if self.boundingBox then
-		return self.position.x + self.boundingBox.x, self.position.y + self.boundingBox.y, self.boundingBox.width, self.boundingBox.height
+		return self.position.x + self.boundingBox.x - (self.anchor.x * size.x), self.position.y + self.boundingBox.y - (self.anchor.y * size.y), self.boundingBox.width * self.scale.x, self.boundingBox.height * self.scale.y
 	end
 
-	return self.position.x, self.position.y, self:getSize():unpack()
+	return self.position.x - (self.anchor.x * size.x), self.position.y - (self.anchor.y * size.y), size:unpack()
 end
 
 return Entity
