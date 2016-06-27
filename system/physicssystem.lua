@@ -193,16 +193,14 @@ function PhysicsSystem:setPosition(e, position)
 end
 
 function PhysicsSystem.filterCollision(item, other)
-	local collType
-	if item.filterCollision then
-		collType = item:filterCollision(other)
-	elseif other.filterCollision then
-		collType = other:filterCollision(item)
-	else
-		return "cross"
+	if item.collisionFilters[other.name] then
+		return item.collisionFilters[other.name](other)
 	end
 
-	return collType
+	if item.solid and other.solid then
+		return "slide"
+	end
+	return "cross"
 end
 
 PhysicsSystem.COLLISION_EVENT = COLLISION_EVENT
