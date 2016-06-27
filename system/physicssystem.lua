@@ -170,14 +170,14 @@ function PhysicsSystem:stopMoving(e, axis)
 	if not axis then
 		e.currentAccelRate = vector(0, 0)
 		e.targetVel = vector(0, 0)
-		e.velocity.y = vector(0, 0)
+		e.velocity = vector(0, 0)
 	elseif axis == "x" then
 		e.currentAccelRate.x = 0
 		e.targetVel.x = 0
 		e.velocity.x = 0
 	elseif axis == "y" then
 		e.currentAccelRate.y = 0
-		e.targetVel.x = 0
+		e.targetVel.y = 0
 		e.velocity.y = 0
 	end
 end
