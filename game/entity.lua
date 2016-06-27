@@ -42,13 +42,18 @@ function Entity:getSize(factorScale)
 end
 
 function Entity:getBoundingBox()
-	local size = self:getSize()
+	local size = self:getSize(false)
 
 	if self.boundingBox then
-		return self.position.x + self.boundingBox.x - (self.anchor.x * size.x), self.position.y + self.boundingBox.y - (self.anchor.y * size.y), self.boundingBox.width * self.scale.x, self.boundingBox.height * self.scale.y
+		local scaleX, scaleY = 1, 1
+		if self.boundingBox.respondsToScale then
+			scaleX = self.scale.x
+			scaleY = self.scale.y
+		end
+		return self.position.x + self.boundingBox.x - (self.anchor.x * size.x * scaleX), self.position.y + self.boundingBox.y - (self.anchor.y * size.y * scaleY), self.boundingBox.width * scaleX, self.boundingBox.height * scaleY
 	end
 
-	return self.position.x - (self.anchor.x * size.x), self.position.y - (self.anchor.y * size.y), size:unpack()
+	return self.position.x - (self.anchor.x * size.x * self.scale.x), self.position.y - (self.anchor.y * size.y * self.scale.y), size:unpack()
 end
 
 return Entity
