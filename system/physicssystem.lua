@@ -10,6 +10,7 @@ local PhysicsSystem = tiny.system(class("PhysicsSystem"))
 local COLLISION_EVENT = "collision"
 local ACCEL_EVENT = "accelerate"
 local STOP_MOVING_EVENT = "stop moving"
+local SET_POSITION = "set position"
 
 function PhysicsSystem:init()
 	self.filter = tiny.requireAny("onContact",
@@ -31,6 +32,9 @@ function PhysicsSystem:init()
 	end)
 	beholder.observe(STOP_MOVING_EVENT, function(e, axis)
 		self:stopMoving(e, axis)
+	end)
+	beholder.observe(SET_POSITION, function(e, position)
+		self:setPosition(e, position)
 	end)
 end
 
@@ -182,6 +186,12 @@ function PhysicsSystem:stopMoving(e, axis)
 	end
 end
 
+function PhysicsSystem:setPosition(e, position)
+	e.position = position
+	self.prevPositions[e] = position
+	self.currentPositions[e] = position
+end
+
 function PhysicsSystem.filterCollision(item, other)
 	local collType
 	if item.filterCollision then
@@ -198,5 +208,6 @@ end
 PhysicsSystem.COLLISION_EVENT = COLLISION_EVENT
 PhysicsSystem.ACCEL_EVENT = ACCEL_EVENT
 PhysicsSystem.STOP_MOVING_EVENT = STOP_MOVING_EVENT
+PhysicsSystem.SET_POSITION = SET_POSITION
 
 return PhysicsSystem
