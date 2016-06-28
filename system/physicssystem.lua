@@ -13,10 +13,9 @@ local STOP_MOVING_EVENT = "stop moving"
 local SET_POSITION = "set position"
 
 function PhysicsSystem:init()
-	self.filter = tiny.requireAny("onContact",
-								  "static",
-								   tiny.requireAll("velocity",
-								   				   "gravity"))
+	self.filter = tiny.requireAny("static",
+								  tiny.requireAll("velocity",
+												  "gravity"))
 
 	self.collWorld = bump.newWorld()
 	self.collisions = {}
@@ -118,8 +117,14 @@ function PhysicsSystem:process(e, dt)
 	end
 
 	-- collisions
-	local goalX = self.currentPositions[e].x + (e.velocity.x * dt)
-	local goalY = self.currentPositions[e].y - (e.velocity.y * dt)
+	local bbOffsetX, bbOffsetY = 0, 0
+	if e.boundingBox then
+		bbOffsetX = e.boundingBox.x
+		bbOffsetY = e.boundingBox.y
+	end
+
+	local goalX = self.currentPositions[e].x + bbOffsetX + (e.velocity.x * dt)
+	local goalY = self.currentPositions[e].y + bbOffsetY - (e.velocity.y * dt)
 	local actualX, actualY, cols, len = self.collWorld:move(e, goalX, goalY, self.filterCollision)
 
 	local collided = {}
@@ -151,8 +156,8 @@ function PhysicsSystem:process(e, dt)
 	end
 
 	-- apply the positions that bump gave us
-	self.currentPositions[e].x = actualX
-	self.currentPositions[e].y = actualY
+	self.currentPositions[e].x = actualX - bbOffsetX
+	self.currentPositions[e].y = actualY - bbOffsetY
 end
 
 function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
