@@ -141,7 +141,7 @@ function PhysicsSystem:process(e, dt)
 			local justHit = self.collisions[e][coll.other] == nil
 			beholder.trigger(COLLISION_EVENT, coll.item, coll.type, coll.other, justHit)
 
-			if not self.collisions[coll.other][e] == nil then
+			if self.collisions[coll.other][e] == nil then
 				beholder.trigger(COLLISION_EVENT, coll.other, coll.type, coll.item, justHit)
 			end
 
@@ -193,7 +193,7 @@ function PhysicsSystem:setPosition(e, position)
 end
 
 function PhysicsSystem.filterCollision(item, other)
-	if item.collisionFilters[other.name] then
+	if item.collisionFilters and item.collisionFilters[other.name] then
 		return item.collisionFilters[other.name](other)
 	end
 
