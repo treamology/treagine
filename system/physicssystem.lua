@@ -127,7 +127,9 @@ function PhysicsSystem:process(e, dt)
 	local goalY = self.currentPositions[e].y + bbOffsetY - (e.velocity.y * dt)
 	local actualX, actualY, cols, len = self.collWorld:move(e, goalX, goalY, self.filterCollision)
 
-	local collided = {}
+	-- apply the positions that bump gave us
+	self.currentPositions[e].x = actualX - bbOffsetX
+	self.currentPositions[e].y = actualY - bbOffsetY
 
 	-- iterate through collision and modify velocity accordingly
 	if len > 0 then
@@ -154,10 +156,6 @@ function PhysicsSystem:process(e, dt)
 			self.collisions[e][coll.other].clear = false
 		end
 	end
-
-	-- apply the positions that bump gave us
-	self.currentPositions[e].x = actualX - bbOffsetX
-	self.currentPositions[e].y = actualY - bbOffsetY
 end
 
 function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
