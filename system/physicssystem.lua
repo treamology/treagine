@@ -161,6 +161,13 @@ end
 function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
 	if e.static then return end
 
+	if not e.currentAccelRate then
+		e.currentAccelRate = vector(0, 0)
+	end
+	if not e.targetVel then
+		e.targetVel = vector(0, 0)
+	end
+
 	if vector.isvector(accel) then
 		e.currentAccelRate = accel
 		e.targetVel = targetVel
