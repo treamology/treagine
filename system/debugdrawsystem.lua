@@ -9,11 +9,13 @@ function DebugDrawSystem:init(screen)
 	self.rectList = {}
 	self.drawFPS = false
 	self.showEntityBounds = false
+	self.showEntityAnchors = false
 
 	self.screen = screen
 
 	beholder.observe("debug", "drawRectangle", function(table) self:addRectangle(table) end)
 	beholder.observe("debug", "showEntityBounds", function(bool) self.showEntityBounds = bool end)
+	beholder.observe("debug", "showEntityAnchors", function(bool) self.showEntityAnchors = bool end)
 end
 
 function DebugDrawSystem:draw()
@@ -36,6 +38,21 @@ function DebugDrawSystem:draw()
 			w = w * rsettings.scaleFactor * self.screen.viewport.scale
 			h = h * rsettings.scaleFactor * self.screen.viewport.scale
 			love.graphics.rectangle(mode, px, py, w, h)
+		end
+	end
+
+	if self.showEntityAnchors then
+		local color = {255, 0, 0, 255}
+		local mode = "fill"
+
+		love.graphics.setColor(color)
+		for e in pairs(self.screen.world.entities) do
+			local size = e:getSize()
+			local x = e.position.x + size.x * e.anchor.x
+			local y = e.position.y + size.y * e.anchor.y
+			local px, py = self.screen.viewport:project(vector(x, y)):unpack()
+
+			love.graphics.circle(mode, px, py, 2, 4)
 		end
 	end
 	
