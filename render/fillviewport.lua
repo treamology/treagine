@@ -18,9 +18,7 @@ function FillViewport:recalculate()
 	-- scales the viewport so that it always fills the screen
 	-- (some parts of the viewport may be cut off at times)
 	-- must be called at least once before the game begins
-
-	-- the target size of the game is 1280 x 720, so it'll just
-	-- fit itself accordingly for different screen sizes
+	
 	local sourceWidth = rsettings.targetWidth
 	local sourceHeight = rsettings.targetHeight
 	local targetWidth = love.graphics.getWidth()
