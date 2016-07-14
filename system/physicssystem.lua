@@ -107,7 +107,7 @@ function PhysicsSystem:process(e, dt)
 			e.velocity.x = e.velocity.x + accelRate.x
 		end
 
-		if e.velocity.y > e.velocity.y - accelRate.y and e.velocity.y < e.velocity.y + accelRate.y then
+		if e.velocity.y > e.targetVel.y - accelRate.y and e.velocity.y < e.targetVel.y + accelRate.y then
 			e.velocity.y = e.targetVel.y
 		elseif e.velocity.y > e.targetVel.y then
 			e.velocity.y = e.velocity.y - accelRate.y
