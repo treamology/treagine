@@ -3,6 +3,7 @@ local tiny = require "treagine.lib.tiny"
 local Camera = require "treagine.lib.camera"
 
 local RenderSystem = require "treagine.system.rendersystem"
+local FillViewport = require "treagine.render.fillviewport"
 local rsettings = require "treagine.render.rendersettings"
 
 local Screen = class("Screen")
@@ -11,7 +12,7 @@ function Screen:init(systems, canvas, viewport, camera)
 	self.backgroundColor = {0, 0, 0, 0}
 	self.systems = systems or {}
 
-	self.viewport = viewport
+	self:setViewport(viewport or FillViewport())
 
 	self.canvas = canvas or love.graphics.newCanvas(love.graphics.getWidth(), love.graphics.getHeight())
 	self.camera = camera or Camera.new(self.canvas:getWidth(), self.canvas:getHeight())
@@ -32,6 +33,11 @@ end
 function Screen:update()
 	love.graphics.setBackgroundColor(self.backgroundColor)
 	tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale)
+
+end
+
+function Screen:resize(w, h)
+	self.viewport:recalculate()
 end
 
 function Screen:getSystemByName(name)
@@ -45,6 +51,11 @@ function Screen:getSystemByName(name)
 			return system
 		end
 	end
+end
+
+function Screen:setViewport(viewport)
+	self.viewport = viewport
+	self.viewport:recalculate()
 end
 
 return Screen
