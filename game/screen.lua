@@ -3,6 +3,7 @@ local tiny = require "treagine.lib.tiny"
 local Camera = require "treagine.lib.camera"
 
 local RenderSystem = require "treagine.system.rendersystem"
+local rsettings = require "treagine.render.rendersettings"
 
 local Screen = class("Screen")
 
@@ -30,7 +31,7 @@ end
 
 function Screen:update()
 	love.graphics.setBackgroundColor(self.backgroundColor)
-	tiny.update(self.world, love.timer.getDelta() * TIME_SCALE)
+	tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale)
 end
 
 function Screen:getSystemByName(name)
