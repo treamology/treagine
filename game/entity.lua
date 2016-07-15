@@ -34,7 +34,7 @@ function Entity:getSize(factorScale)
 		if factorScale then
 			return vector(sizeX * self.scale.x, sizeY * self.scale.y)
 		else
-			return vector(sizeX, sizeYs)
+			return vector(sizeX, sizeY)
 		end
 	end
 
