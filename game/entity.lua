@@ -36,6 +36,13 @@ function Entity:getSize(factorScale)
 		else
 			return vector(sizeX, sizeY)
 		end
+	elseif self.canvas then
+		local sizeX, sizeY = self.canvas:getDimensions()
+		if factorScale then
+			return vector(sizeX * self.scale.x, sizeY * self.scale.y)
+		else
+			return vector(sizeX, sizeY)
+		end
 	end
 
 	print(self.name .. " size was not returned.")

@@ -44,7 +44,10 @@ function RenderSystem:drawEntity(e, position, dt)
 			love.graphics.draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 		end
 	elseif e.canvas then
+		--dunno if we need this, turn it back on if there's a bug with it.
+		--love.graphics.setBlendMode("alpha", "premultiplied")
 		love.graphics.draw(e.canvas, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
+		--love.graphics.setBlendMode("alpha")
 	elseif e.drawMode then
 		love.graphics.rectangle(e.drawMode, position.x, position.y, e.size.x, e.size.y)
 	elseif e.text then
@@ -60,7 +63,6 @@ end
 function RenderSystem:preProcess(dt)
 	love.graphics.setCanvas(self.screen.canvas)
 	love.graphics.clear()
-	love.graphics.setBlendMode("alpha")
 
 	self.screen.camera:attach()
 end
@@ -95,6 +97,7 @@ function RenderSystem:postProcess(dt)
 	love.graphics.setShader()
 	love.graphics.draw(self.screen.canvas, self.screen.viewport.position.x, self.screen.viewport.position.y, 0,
 		self.screen.viewport.size.x / self.screen.canvas:getWidth(), self.screen.viewport.size.y / self.screen.canvas:getHeight())
+	love.graphics.setBlendMode("alpha")
 end
 
 function RenderSystem:compare(e1, e2)
