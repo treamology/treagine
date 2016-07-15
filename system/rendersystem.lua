@@ -9,7 +9,8 @@ function RenderSystem:init(screen)
 								  tiny.requireAny("image",
 												  tiny.requireAll("drawMode", "size"),
 												  "text",
-												  "children"))
+												  "children",
+												  "canvas"))
 
 	self.screen = screen
 	self.uiSystem = screen:getSystemByName("UISystem")
@@ -42,6 +43,8 @@ function RenderSystem:drawEntity(e, position, dt)
 		else
 			love.graphics.draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 		end
+	elseif e.canvas then
+		love.graphics.draw(e.canvas, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 	elseif e.drawMode then
 		love.graphics.rectangle(e.drawMode, position.x, position.y, e.size.x, e.size.y)
 	elseif e.text then
