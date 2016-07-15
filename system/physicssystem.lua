@@ -200,6 +200,7 @@ function PhysicsSystem:setPosition(e, position)
 	e.position = position
 	self.prevPositions[e] = position
 	self.currentPositions[e] = position
+	self.collWorld:update(e, position.x, position.y)
 end
 
 function PhysicsSystem.filterCollision(item, other)
