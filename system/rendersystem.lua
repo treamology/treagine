@@ -10,7 +10,8 @@ function RenderSystem:init(screen)
 												  tiny.requireAll("drawMode", "size"),
 												  "text",
 												  "children",
-												  "canvas"))
+												  "canvas",
+												  "particleSystem"))
 
 	self.screen = screen
 	self.uiSystem = screen:getSystemByName("UISystem")
@@ -48,6 +49,9 @@ function RenderSystem:drawEntity(e, position, dt)
 		--love.graphics.setBlendMode("alpha", "premultiplied")
 		love.graphics.draw(e.canvas, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 		--love.graphics.setBlendMode("alpha")
+	elseif e.particleSystem then
+		e.particleSystem:update(dt)
+		love.graphics.draw(e.particleSystem, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
 	elseif e.drawMode then
 		love.graphics.rectangle(e.drawMode, position.x, position.y, e.size.x, e.size.y)
 	elseif e.text then
