@@ -44,8 +44,6 @@ function Entity:getSize(factorScale)
 			return vector(sizeX, sizeY)
 		end
 	end
-
-	print(self.name .. " size was not returned.")
 end
 
 function Entity:getBoundingBox()

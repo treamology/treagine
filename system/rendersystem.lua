@@ -31,11 +31,15 @@ function RenderSystem:drawEntity(e, position, dt)
 		love.graphics.setShader()
 	end
 
-	local sizeX, sizeY = e:getSize(false):unpack()
-	local anchorX, anchorY = e.anchor:unpack()
+	local anchorX, anchorY = 0, 0
 
-	anchorX = anchorX * sizeX
-	anchorY = anchorY * sizeY
+	local size = e:getSize(false)
+	if size then
+		anchorX, anchorY = e.anchor:unpack()
+
+		anchorX = anchorX * size.x
+		anchorY = anchorY * size.y
+	end
 
 	if e.image then
 		if e.currentAnimation then
