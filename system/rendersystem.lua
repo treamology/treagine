@@ -1,70 +1,78 @@
 local class = require "treagine.lib.30log"
 local tiny = require "treagine.lib.tiny"
+local vector = require "treagine.lib.vector"
 local mathutils = require "treagine.util.mathutils"
 
 local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
 function RenderSystem:init(screen)
-	self.filter = tiny.requireAll("position", "scale", "rotation", "anchor",
-								  tiny.requireAny("image",
-												  tiny.requireAll("drawMode", "size"),
-												  "text",
-												  "children",
-												  "canvas",
-												  "particleSystem"))
-
 	self.screen = screen
-	self.uiSystem = screen:getSystemByName("UISystem")
+
+	self.filter = tiny.requireAll("position", "renderables")
+
+	self.defaultShader = love.graphics.getShader()
 end
 
-function RenderSystem:drawEntity(e, position, dt)
-	love.graphics.setColor(e.color or 255, 255, 255, 255)
-	
-	if e.shader then
-		if e.shaderExterns then
-			for k, v in pairs(e.shaderExterns) do
-				e.shader:send(k, v)
+function RenderSystem:drawRenderable(e, r, dt)
+	love.graphics.setColor(r.color or 255, 255, 255, 255)
+
+	-- valid types are "image", "canvas", "particleSystem", and "rect"
+	assert(r.type, "Renderable must have a type.")
+
+	-- shaders can be applied entity-wide, while also having renderable-specific shaders.
+	-- renderable shaders override the shader applied to the entity, if any.
+	if r.shader then
+		if r.shaderExterns then
+			for k, v in pairs(r.shaderExterns) do
+				r.shader:send(k, v)
 			end
 		end
+
+		love.graphics.setShader(r.shader)
+	elseif e.shader then
+		-- overwrite entity-wide externs with renderable specific
+		local shaderExterns = e.shaderExterns or {}
+		if r.shaderExterns then
+			for k, v in pairs(r.shaderExterns) do
+				shaderExterns[k] = v
+			end
+		end
+
+		for k, v in pairs(shaderExterns) do
+			e.shader:send(k, v)
+		end
+
 		love.graphics.setShader(e.shader)
 	else
 		love.graphics.setShader()
 	end
 
-	local anchorX, anchorY = 0, 0
+	local offset = r.offset or vector(0, 0)
+	local rotation = r.rotation or 0
+	local scale = r.scale or vector(1, 1)
 
-	local size = e:getSize(false)
-	if size then
-		anchorX, anchorY = e.anchor:unpack()
+	local drawParams = { mathutils.round(e.position.x), mathutils.round(e.position.y), rotation, scale.x, scale.y, offset.x, offset.y }
 
-		anchorX = anchorX * size.x
-		anchorY = anchorY * size.y
-	end
-
-	if e.image then
-		if e.currentAnimation then
-			e.currentAnimation:update(dt)
-			e.currentAnimation:draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
+	if r.type == "image" then
+		if r.currentAnimation then
+			r.currentAnimation:update(dt)
+			r.currentAnimation:draw(r.image, unpack(drawParams))
 		else
-			love.graphics.draw(e.image, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
+			love.graphics.draw(r.image, unpack(drawParams))
 		end
-	elseif e.canvas then
-		--dunno if we need this, turn it back on if there's a bug with it.
-		--love.graphics.setBlendMode("alpha", "premultiplied")
-		love.graphics.draw(e.canvas, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
-		--love.graphics.setBlendMode("alpha")
-	elseif e.particleSystem then
-		e.particleSystem:update(dt)
-		love.graphics.draw(e.particleSystem, mathutils.round(position.x), mathutils.round(position.y), e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
-	elseif e.drawMode then
-		love.graphics.rectangle(e.drawMode, position.x, position.y, e.size.x, e.size.y)
-	elseif e.text then
-		if e.font then
-			love.graphics.setFont(e.font)
-		else
-			love.graphics.setNewFont(12)
-		end
-		love.graphics.print(e.text, position.x, position.y, e.rotation, e.scale.x, e.scale.y, anchorX, anchorY)
+
+	elseif r.type == "canvas" then
+		love.graphics.draw(r.canvas, unpack(drawParams))
+
+	elseif r.type == "particleSystem" then
+		r.particleSystem:update(dt)
+		love.graphics.draw(r.particleSystem, unpack(drawParams))
+
+	elseif r.type == "rect" then
+		local drawMode = r.drawMode or "fill"
+		local size = r.size or vector(0, 0)
+
+		love.graphics.rectangle(drawMode, mathutils.round(e.position.x + offset.x), mathutils.round(e.position.y + offset.y), size.x, size.y)
 	end
 end
 
@@ -76,6 +84,8 @@ function RenderSystem:preProcess(dt)
 end
 
 function RenderSystem:process(e, dt)
+	for _, r in ipairs(e.renderables) do
+		self:drawRenderable(e, r, dt)
 	end
 end
 

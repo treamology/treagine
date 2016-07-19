@@ -1,13 +1,12 @@
 local class = require "treagine.lib.30log"
 local vector = require "treagine.lib.vector"
+local vectorl = require "treagine.lib.vector-light"
 
 local Entity = class("Entity")
 
 function Entity:init()
 	self.position = vector(0, 0)
-	self.scale = vector(1, 1)
-	self.rotation = 0 -- in radians
-	self.anchor = vector(0, 0)
+	self.renderables = {}
 end
 
 function Entity:getCenter()
@@ -16,49 +15,42 @@ end
 
 function Entity:setCenter(x, y)
 	local size = self:getSize()
-	self.position.x = x - (size.x / 2 - (self.anchor.x * size.x))
-	self.position.y = y - (size.y / 2 - (self.anchor.y * size.y))
+	self.position.x = x - (size.x / 2)
+	self.position.y = y - (size.y / 2)
 end
 
-function Entity:getSize(factorScale)
-	if factorScale == nil then factorScale = true end
+function Entity:getTrueBounds()
+	local minX, minY, maxX, maxY = 0, 0, 0, 0
 
-	if self.size then
-		if factorScale then
-			return self.size * self.scale
-		else
-			return self.size
-		end
-	elseif self.image then
-		local sizeX, sizeY = self.image:getDimensions()
-		if factorScale then
-			return vector(sizeX * self.scale.x, sizeY * self.scale.y)
-		else
-			return vector(sizeX, sizeY)
-		end
-	elseif self.canvas then
-		local sizeX, sizeY = self.canvas:getDimensions()
-		if factorScale then
-			return vector(sizeX * self.scale.x, sizeY * self.scale.y)
-		else
-			return vector(sizeX, sizeY)
-		end
+	for _, r in ipairs(self.renderables) do
+		local offset = -(r.offset or vector(0, 0))
+		local size = r.size or vector(r.image:getDimensions()) or vector(0, 0)
+		if offset.x < minX then minX = offset.x end
+		if offset.y < minY then minY = offset.y end
+		if offset.x + size.x > maxX then maxX = offset.x + size.x end
+		if offset.y + size.y > maxY then maxY = offset.y + size.y end
 	end
+
+	local x = minX
+	local y = minY
+	local width = vectorl.dist(maxX, minY, minX, minY)
+	local height = vectorl.dist(minX, minY, minX, maxY)
+
+	return x, y, width, height
+end
+
+function Entity:getSize()
+	local _, _, width, height = self:getTrueBounds()
+	return width, height
 end
 
 function Entity:getBoundingBox()
-	local size = self:getSize(false)
-
 	if self.boundingBox then
-		local scaleX, scaleY = 1, 1
-		if self.boundingBox.respondsToScale then
-			scaleX = self.scale.x
-			scaleY = self.scale.y
-		end
-		return self.position.x + self.boundingBox.x - (self.anchor.x * size.x * scaleX), self.position.y + self.boundingBox.y - (self.anchor.y * size.y * scaleY), self.boundingBox.width * scaleX, self.boundingBox.height * scaleY
+		return self.position.x + self.boundingBox.x, self.position.y + self.boundingBox.y, self.boundingBox.width, self.boundingBox.height
 	end
+	local x, y, w, h = self:getTrueBounds()
+	return self.position.x + x, self.position.y + y, w, h
 
-	return self.position.x - (self.anchor.x * size.x * self.scale.x), self.position.y - (self.anchor.y * size.y * self.scale.y), size:unpack()
 end
 
 return Entity
