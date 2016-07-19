@@ -47,9 +47,9 @@ function DebugDrawSystem:draw()
 
 		love.graphics.setColor(color)
 		for e in pairs(self.screen.world.entities) do
-			local size = e:getSize()
-			local x = e.position.x + size.x * e.anchor.x
-			local y = e.position.y + size.y * e.anchor.y
+			local sizeX, sizeY = e:getSize()
+			local x = e.position.x + sizeX
+			local y = e.position.y + sizeY
 			local px, py = self.screen.viewport:project(vector(x, y)):unpack()
 
 			love.graphics.circle(mode, px, py, 2, 4)
