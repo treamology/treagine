@@ -14,7 +14,7 @@ function RenderSystem:init(screen)
 end
 
 function RenderSystem:drawRenderable(e, r, dt)
-	love.graphics.setColor(r.color or 255, 255, 255, 255)
+	love.graphics.setColor(r.color or e.color or 255, 255, 255, 255)
 
 	-- valid types are "image", "canvas", "particleSystem", and "rect"
 	assert(r.type, "Renderable must have a type.")
