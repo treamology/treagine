@@ -76,14 +76,6 @@ function RenderSystem:preProcess(dt)
 end
 
 function RenderSystem:process(e, dt)
-	-- if entity is an entitygroup
-	if e.children then
-		for _, child in ipairs(e.children) do
-			local drawPos = e.position + child.position
-			self:drawEntity(child, drawPos, dt)
-		end
-	else
-		self:drawEntity(e, e.position, dt)
 	end
 end
 
