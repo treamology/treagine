@@ -76,9 +76,6 @@ function RenderSystem:preProcess(dt)
 end
 
 function RenderSystem:process(e, dt)
-	-- UI gets rendered later
-	if e.parent then return end
-
 	-- if entity is an entitygroup
 	if e.children then
 		for _, child in ipairs(e.children) do
@@ -92,12 +89,6 @@ end
 
 function RenderSystem:postProcess(dt)
 	self.screen.camera:detach()
-
-	if self.uiSystem then
-		for _, node in ipairs(self.uiSystem.entities) do
-			self:drawEntity(node, node.absolutePosition, dt)
-		end
-	end
 
 	love.graphics.setCanvas()
 	love.graphics.setBlendMode("alpha", "premultiplied")
