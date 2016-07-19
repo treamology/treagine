@@ -22,7 +22,7 @@ end
 function Entity:getTrueBounds()
 	local minX, minY, maxX, maxY = 0, 0, 0, 0
 
-	for _, r in ipairs(self.renderables) do
+	for _, r in pairs(self.renderables) do
 		local offset = -(r.offset or vector(0, 0))
 		local size = r.size or vector(r.image:getDimensions()) or vector(0, 0)
 		if offset.x < minX then minX = offset.x end

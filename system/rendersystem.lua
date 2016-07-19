@@ -84,7 +84,7 @@ function RenderSystem:preProcess(dt)
 end
 
 function RenderSystem:process(e, dt)
-	for _, r in ipairs(e.renderables) do
+	for _, r in pairs(e.renderables) do
 		self:drawRenderable(e, r, dt)
 	end
 end
