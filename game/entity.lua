@@ -11,7 +11,7 @@ end
 
 function Entity:getCenter()
 	local sizeX, sizeY = self:getSize()
-	local x, y = self.position.x + sizeX, self.position.y + sizeY
+	local x, y = self.position.x + sizeX / 2, self.position.y + sizeY / 2
 	return x, y
 end
 
