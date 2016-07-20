@@ -26,7 +26,12 @@ function Entity:getTrueBounds()
 
 	for _, r in pairs(self.renderables) do
 		local offset = -(r.offset or vector(0, 0))
-		local size = r.size or vector(r.currentAnimation:getDimensions()) or vector(r.image:getDimensions()) or vector(0, 0)
+		local animDimensions
+		if r.currentAnimation then
+			animDimensions = vector(r.currentAnimation:getDimensions())
+		end
+		local size = r.size or animDimensions or vector(r.image:getDimensions()) or vector(0, 0)
+		local size = size * (r.scale or 1)
 		if offset.x < minX then minX = offset.x end
 		if offset.y < minY then minY = offset.y end
 		if offset.x + size.x > maxX then maxX = offset.x + size.x end
