@@ -16,9 +16,6 @@ end
 function RenderSystem:drawRenderable(e, r, dt)
 	love.graphics.setColor(r.color or e.color or 255, 255, 255, 255)
 
-	-- valid types are "image", "canvas", "particleSystem", and "rect"
-	assert(r.type, "Renderable must have a type.")
-
 	-- shaders can be applied entity-wide, while also having renderable-specific shaders.
 	-- renderable shaders override the shader applied to the entity, if any.
 	if r.shader then
@@ -47,33 +44,35 @@ function RenderSystem:drawRenderable(e, r, dt)
 		love.graphics.setShader()
 	end
 
-	local offset = r.offset or vector(0, 0)
-	local rotation = r.rotation or 0
-	local scale = r.scale or vector(1, 1)
+	local offsetX, offsetY, anchorX, anchorY, rotationX, rotationY, scaleX, scaleY
 
-	local drawParams = { mathutils.round(e.position.x), mathutils.round(e.position.y), rotation, scale.x, scale.y, offset.x, offset.y }
+	if r.offset then offsetX, offsetY = r.offset.x, r.offset.y else offsetX, offsetY = 0, 0 end
+	if r.rotation then rotationX, rotationY = r.rotation.x, r.rotation.y else rotationX, rotationY = 0, 0 end
+	if r.scale then scaleX, scaleY = r.scale.x, r.scale.y else scaleX, scaleY = 1, 1 end
+	if r.anchor then anchorX, anchorY = r.anchor.x, r.anchor.y else anchorX, anchorY = 0, 0 end
 
-	if r.type == "image" then
-		if r.currentAnimation then
-			r.currentAnimation:update(dt)
-			r.currentAnimation:draw(r.image, unpack(drawParams))
-		else
-			love.graphics.draw(r.image, unpack(drawParams))
-		end
+	if r.currentAnimation then
+		local sizeX, sizeY = r.currentAnimation:getDimensions()
+		anchorX, anchorY = sizeX * anchorX, sizeY * anchorY
 
-	elseif r.type == "canvas" then
-		love.graphics.draw(r.canvas, unpack(drawParams))
+		r.currentAnimation:update(dt)
+		r.currentAnimation:draw(r.image, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
+		return
 
-	elseif r.type == "particleSystem" then
+	elseif r.image then
+		local sizeX, sizeY = r.image:getDimensions()
+		anchorX, anchorY = sizeX * anchorX, sizeY * anchorY
+
+	elseif r.particleSystem then
 		r.particleSystem:update(dt)
-		love.graphics.draw(r.particleSystem, unpack(drawParams))
 
-	elseif r.type == "rect" then
-		local drawMode = r.drawMode or "fill"
-		local size = r.size or vector(0, 0)
-
-		love.graphics.rectangle(drawMode, mathutils.round(e.position.x + offset.x), mathutils.round(e.position.y + offset.y), size.x, size.y)
+	elseif r.drawMode then
+		anchorX, anchorY = r.size.x * anchorX, r.size.y * anchorY
+		love.graphics.rectangle(r.drawMode, mathutils.round(e.position.x + offsetX + anchorX), mathutils.round(e.position.y + offsetY + anchorY))
+		return
 	end
+
+	love.graphics.draw(r.image or r.canvas or r.particleSystem, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
 end
 
 function RenderSystem:preProcess(dt)
