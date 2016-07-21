@@ -11,7 +11,7 @@ end
 
 function Entity:getCenter()
 	local bx, by, bw, bh = self:getTrueBounds()
-	local x, y = self.position.x + bx + bw / 2, self.position.y + by + by / 2
+	local x, y = self.position.x + bx + bw / 2, self.position.y + by + bh / 2
 	return x, y
 end
 

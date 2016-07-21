@@ -54,6 +54,19 @@ function DebugDrawSystem:draw()
 			love.graphics.circle(mode, px, py, 2, 4)
 		end
 	end
+
+	if self.showCalculatedCenters then
+		local color = {0, 255, 0, 255}
+		local mode = "fill"
+
+		love.graphics.setColor(color)
+		for e in pairs(self.screen.world.entities) do
+			local x, y = e:getCenter()
+			local px, py = self.screen.viewport:project(vector(x, y)):unpack()
+
+			love.graphics.circle(mode, px, py, 2, 4)
+		end
+	end
 	
 	for k, v in pairs(self.rectList) do
 		if v.size ~= nil and v.position ~= nil then
