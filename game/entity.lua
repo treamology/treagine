@@ -10,8 +10,8 @@ function Entity:init()
 end
 
 function Entity:getCenter()
-	local sizeX, sizeY = self:getSize()
-	local x, y = self.position.x + sizeX / 2, self.position.y + sizeY / 2
+	local bx, by, bw, bh = self:getTrueBounds()
+	local x, y = self.position.x + bx + bw / 2, self.position.y + by + by / 2
 	return x, y
 end
 
