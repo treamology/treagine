@@ -33,7 +33,12 @@ function Entity:getTrueBounds()
 			animDimensions = vector(r.currentAnimation:getDimensions())
 		end
 
-		local size = r.size or animDimensions or vector(r.image:getDimensions()) or vector(0, 0)
+		local imageDimensions
+		if r.image then
+			imageDimensions = vector(r.image:getDimensions())
+		end
+
+		local size = r.size or animDimensions or imageDimensions or vector(0, 0)
 		if r.scale then size = size * r.scale end
 
 		local anchorX, anchorY = 0, 0
