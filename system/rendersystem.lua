@@ -8,7 +8,7 @@ local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 function RenderSystem:init(screen)
 	self.screen = screen
 
-	self.filter = tiny.requireAll("position", "renderables")
+	self.filter = tiny.requireAll("position", "renderList")
 
 	self.defaultShader = love.graphics.getShader()
 end
@@ -83,7 +83,7 @@ function RenderSystem:preProcess(dt)
 end
 
 function RenderSystem:process(e, dt)
-	for _, r in pairs(e.renderables) do
+	for _, r in pairs(e.renderList) do
 		self:drawRenderable(e, r, dt)
 	end
 end

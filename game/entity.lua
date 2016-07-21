@@ -6,7 +6,7 @@ local Entity = class("Entity")
 
 function Entity:init()
 	self.position = vector(0, 0)
-	self.renderables = {}
+	self.renderList = {}
 end
 
 function Entity:getCenter()
@@ -24,7 +24,7 @@ end
 function Entity:getTrueBounds()
 	local minX, minY, maxX, maxY = 0, 0, 0, 0
 
-	for _, r in pairs(self.renderables) do
+	for _, r in pairs(self.renderList) do
 		local offsetX, offsetY = 0, 0
 		if r.offset then offsetX, offsetY = -r.offset.x, -r.offset.y end
 
