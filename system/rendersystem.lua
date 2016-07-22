@@ -44,10 +44,10 @@ function RenderSystem:drawRenderable(e, r, dt)
 		love.graphics.setShader()
 	end
 
-	local offsetX, offsetY, anchorX, anchorY, rotationX, rotationY, scaleX, scaleY
+	local offsetX, offsetY, anchorX, anchorY, rotation, scaleX, scaleY
 
 	if r.offset then offsetX, offsetY = r.offset.x, r.offset.y else offsetX, offsetY = 0, 0 end
-	if r.rotation then rotationX, rotationY = r.rotation.x, r.rotation.y else rotationX, rotationY = 0, 0 end
+	if r.rotation then rotation = r.rotation else rotation = 0 end
 	if r.scale then scaleX, scaleY = r.scale.x, r.scale.y else scaleX, scaleY = 1, 1 end
 	if r.anchor then anchorX, anchorY = r.anchor.x, r.anchor.y else anchorX, anchorY = 0, 0 end
 
