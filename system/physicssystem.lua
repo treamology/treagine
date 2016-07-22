@@ -117,11 +117,8 @@ function PhysicsSystem:process(e, dt)
 	end
 
 	-- collisions
-	local bbOffsetX, bbOffsetY = 0, 0
-	if e.boundingBox then
-		bbOffsetX = e.boundingBox.x
-		bbOffsetY = e.boundingBox.y
-	end
+	local bbOffsetX, bbOffsetY = e:getBoundingBox()
+	bbOffsetX, bbOffsetY = bbOffsetX - e.position.x, bbOffsetY - e.position.y
 
 	local goalX = self.currentPositions[e].x + bbOffsetX + (e.velocity.x * dt)
 	local goalY = self.currentPositions[e].y + bbOffsetY - (e.velocity.y * dt)
