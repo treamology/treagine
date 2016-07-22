@@ -67,8 +67,8 @@ function RenderSystem:drawRenderable(e, r, dt)
 		r.particleSystem:update(dt)
 
 	elseif r.drawMode then
-		anchorX, anchorY = r.size.x * anchorX, r.size.y * anchorY
-		love.graphics.rectangle(r.drawMode, mathutils.round(e.position.x + offsetX + anchorX), mathutils.round(e.position.y + offsetY + anchorY))
+		anchorX, anchorY = r.size.x * -anchorX, r.size.y * -anchorY
+		love.graphics.rectangle(r.drawMode, mathutils.round(e.position.x + offsetX + anchorX), mathutils.round(e.position.y + offsetY + anchorY), r.size.x, r.size.y)
 		return
 	end
 
