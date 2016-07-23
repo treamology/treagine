@@ -83,7 +83,13 @@ function RenderSystem:preProcess(dt)
 end
 
 function RenderSystem:process(e, dt)
-	for _, r in pairs(e.renderList) do
+	local orderedList = {}
+	for _, v in pairs(e.renderList) do
+		table.insert(orderedList, v)
+	end
+	table.sort(orderedList, function(a, b) return self:compare(a, b) end)
+
+	for _, r in ipairs(orderedList) do
 		self:drawRenderable(e, r, dt)
 	end
 end
