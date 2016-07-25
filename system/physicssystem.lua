@@ -7,10 +7,11 @@ local vector = require "treagine.lib.vector"
 
 local PhysicsSystem = tiny.system(class("PhysicsSystem"))
 
-local COLLISION_EVENT = "collision"
-local ACCEL_EVENT = "accelerate"
-local STOP_MOVING_EVENT = "stop moving"
-local SET_POSITION = "set position"
+local COLLISION_EVENT = "COLLISION_EVENT"
+local ACCEL_EVENT = "SET_ACCELERATION"
+local STOP_MOVING_EVENT = "STOP_MOVING"
+local SET_POSITION = "SET_POSITION"
+local SET_VELOCITY = "SET_VELOCITY"
 
 function PhysicsSystem:init()
 	self.filter = tiny.requireAny("static",
@@ -34,6 +35,9 @@ function PhysicsSystem:init()
 	end)
 	beholder.observe(SET_POSITION, function(e, position)
 		self:setPosition(e, position)
+	end)
+	beholder.observe(SET_VELOCITY, function(e, velocity, axis)
+		self:setVelocity(e, velocity, axis)
 	end)
 end
 
@@ -155,6 +159,24 @@ function PhysicsSystem:process(e, dt)
 	end
 end
 
+function PhysicsSystem:setVelocity(e, velocity, axis)
+	if e.static then return end
+
+	e.currentAccelRate = vector(0, 0)
+
+	if not e.targetVel then
+		e.targetVel = vector(0, 0)
+	end
+
+	if vector.isvector(velocity) then
+		e.targetVel = velocity
+		e.velocity = velocity
+	else
+		e.targetVel[axis] = velocity
+		e.velocity[axis] = velocity
+	end
+end
+
 function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
 	if e.static then return end
 
@@ -165,7 +187,7 @@ function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
 		e.targetVel = vector(0, 0)
 	end
 
-	if vector.isvector(accel) then
+	if not axis then
 		e.currentAccelRate = accel
 		e.targetVel = targetVel
 	elseif axis == "x" then
@@ -215,5 +237,6 @@ PhysicsSystem.COLLISION_EVENT = COLLISION_EVENT
 PhysicsSystem.ACCEL_EVENT = ACCEL_EVENT
 PhysicsSystem.STOP_MOVING_EVENT = STOP_MOVING_EVENT
 PhysicsSystem.SET_POSITION = SET_POSITION
+PhysicsSystem.SET_VELOCITY = SET_VELOCITY
 
 return PhysicsSystem
