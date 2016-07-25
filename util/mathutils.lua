@@ -21,4 +21,10 @@ function mathutils.round(num)
 	return math.floor(num + 0.5)
 end
 
+function mathutils.radiansToHeading(radians)
+	local x = math.cos(radians)
+	local y = math.sin(radians)
+	return x, y
+end
+
 return mathutils
