@@ -21,8 +21,4 @@ function mathutils.round(num)
 	return math.floor(num + 0.5)
 end
 
-function mathutils.toRadians(degrees)
-	return degrees * (math.pi / 180)
-end
-
 return mathutils
