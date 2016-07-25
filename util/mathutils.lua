@@ -1,3 +1,5 @@
+local vector = require "treagine.lib.vector"
+
 local mathutils = {}
 
 function mathutils.lerpColors(baseColor, targetColor, progress)
@@ -24,7 +26,11 @@ end
 function mathutils.radiansToHeading(radians)
 	local x = math.cos(radians)
 	local y = math.sin(radians)
-	return x, y
+	return vector(x, y)
+end
+
+function mathutils.headingToRadians(heading)
+	return math.atan2(heading.y, heading.x)
 end
 
 return mathutils
