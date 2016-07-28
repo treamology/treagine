@@ -20,6 +20,7 @@ function Screen:init(systems, canvas, viewport, camera)
 	self.viewport.camera = self.camera
 
 	self.started = false
+	self.paused = false
 end
 
 function Screen:load()
@@ -39,7 +40,11 @@ end
 
 function Screen:update()
 	love.graphics.setBackgroundColor(self.backgroundColor)
-	tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale)
+	if self.paused then
+		tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale, tiny.requireAll("runWhenPaused"))
+	else
+		tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale)
+	end
 end
 
 function Screen:resize(w, h)

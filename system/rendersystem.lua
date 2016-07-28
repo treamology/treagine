@@ -9,6 +9,7 @@ function RenderSystem:init(screen)
 	self.screen = screen
 
 	self.filter = tiny.requireAll("position", "renderList")
+	self.runWhenPaused = true
 
 	self.defaultShader = love.graphics.getShader()
 end
@@ -55,7 +56,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 		local sizeX, sizeY = r.currentAnimation:getDimensions()
 		anchorX, anchorY = sizeX * anchorX, sizeY * anchorY
 
-		r.currentAnimation:update(dt)
+		if not self.screen.paused then r.currentAnimation:update(dt) end
 		r.currentAnimation:draw(r.image, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
 		return
 
@@ -64,7 +65,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 		anchorX, anchorY = sizeX * anchorX, sizeY * anchorY
 
 	elseif r.particleSystem then
-		r.particleSystem:update(dt)
+		if not self.screen.paused then r.particleSystem:update(dt) end
 
 	elseif r.drawMode then
 		anchorX, anchorY = r.size.x * -anchorX, r.size.y * -anchorY
