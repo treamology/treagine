@@ -13,7 +13,7 @@ function GameManager:load()
 end
 
 function GameManager:update(dt)
-	if self.currentScreen then self.currentScreen:update(dt) end
+	if self.currentScreen and self.currentScreen.started then self.currentScreen:update(dt) end
 end
 
 function GameManager:resize(w, h)

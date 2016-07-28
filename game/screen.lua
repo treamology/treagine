@@ -18,6 +18,8 @@ function Screen:init(systems, canvas, viewport, camera)
 	self.camera = camera or Camera.new(self.canvas:getWidth(), self.canvas:getHeight())
 
 	self.viewport.camera = self.camera
+
+	self.started = false
 end
 
 function Screen:load()
@@ -30,10 +32,14 @@ function Screen:load()
 	self.world:addSystem(RenderSystem(self))
 end
 
+function Screen:start()
+	tiny.refresh(self.world)
+	self.started = true
+end
+
 function Screen:update()
 	love.graphics.setBackgroundColor(self.backgroundColor)
 	tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale)
-
 end
 
 function Screen:resize(w, h)
