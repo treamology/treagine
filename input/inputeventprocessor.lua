@@ -1,5 +1,6 @@
 local beholder = require "treagine.lib.beholder"
 local kp = require "treagine.input.keyboardprocessor"
+local mp = require "treagine.input.mouseprocessor"
 
 local InputEventProcessor = {}
 
@@ -14,7 +15,18 @@ end
 
 function InputEventProcessor.update()
 	for k, v in pairs(inputs) do
-		if kp.keyState[v] ~= nil then
+
+		local state
+
+		if string.find(v, "mouse") then
+			local clipped = string.gsub(v, "mouse", "")
+			local index = tonumber(clipped)
+			state = mp.mouseState[index]
+		else
+			state = kp.keyState[v]
+		end
+
+		if state ~= nil then
 			beholder.trigger(INPUT_EVENT, k)
 			eventState[k] = true
 		else
