@@ -56,7 +56,9 @@ function RenderSystem:drawRenderable(e, r, dt)
 		local sizeX, sizeY = r.currentAnimation:getDimensions()
 		anchorX, anchorY = sizeX * anchorX, sizeY * anchorY
 
-		if not self.screen.paused then r.currentAnimation:update(dt) end
+		local playAnim = r.currentAnimation.playWhenPaused or true
+
+		if not self.screen.paused or playAnim then r.currentAnimation:update(dt) end
 		r.currentAnimation:draw(r.image, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
 		return
 
@@ -65,7 +67,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 		anchorX, anchorY = sizeX * anchorX, sizeY * anchorY
 
 	elseif r.particleSystem then
-		if not self.screen.paused then r.particleSystem:update(dt) end
+		r.particleSystem:update(dt)
 
 	elseif r.drawMode then
 		anchorX, anchorY = r.size.x * -anchorX, r.size.y * -anchorY
