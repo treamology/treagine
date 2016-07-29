@@ -56,7 +56,8 @@ function RenderSystem:drawRenderable(e, r, dt)
 		local sizeX, sizeY = r.currentAnimation:getDimensions()
 		anchorX, anchorY = sizeX * anchorX, sizeY * anchorY
 
-		local playAnim = r.currentAnimation.playWhenPaused or true
+		local playAnim = r.currentAnimation.playWhenPaused
+		if playAnim == nil then playAnim = true end
 
 		if not self.screen.paused or playAnim then r.currentAnimation:update(dt) end
 		r.currentAnimation:draw(r.image, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
