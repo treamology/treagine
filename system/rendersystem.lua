@@ -15,6 +15,10 @@ function RenderSystem:init(screen)
 end
 
 function RenderSystem:drawRenderable(e, r, dt)
+	if r.hidden then
+		return
+	end
+
 	love.graphics.setColor(r.color or e.color or 255, 255, 255, 255)
 
 	-- shaders can be applied entity-wide, while also having renderable-specific shaders.
@@ -92,6 +96,10 @@ function RenderSystem:process(e, dt)
 		table.insert(orderedList, v)
 	end
 	table.sort(orderedList, function(a, b) return self:compare(a, b) end)
+
+	if e.hidden then
+		return
+	end
 
 	for _, r in ipairs(orderedList) do
 		self:drawRenderable(e, r, dt)
