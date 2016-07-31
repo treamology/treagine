@@ -38,17 +38,22 @@ function Entity:getTrueBounds()
 			imageDimensions = vector(r.image:getDimensions())
 		end
 
-		local size = r.size or animDimensions or imageDimensions or vector(0, 0)
+		local fontDimensions
+		if r.font and r.text then
+			fontDimensions = vector(r.font:getWidth(r.text), r.font:getHeight())
+		end
+
+		local size = r.size or animDimensions or imageDimensions or fontDimensions or vector(0, 0)
 		if r.scale then size = size * r.scale end
 
 		local anchorX, anchorY = 0, 0
 		if r.anchor then anchorX, anchorY = r.anchor.x, r.anchor.y end
 		anchorX, anchorY = size.x * -anchorX, size.y * -anchorY
 
-		if offsetX + anchorX < minX then minX = offsetX + anchorX end
-		if offsetY + anchorY < minY then minY = offsetY + anchorY end
-		if offsetX + anchorX + size.x > maxX then maxX = offsetX + anchorX + size.x end
-		if offsetY + anchorY + size.y > maxY then maxY = offsetY + anchorY + size.y end
+		if -offsetX + anchorX < minX then minX = -offsetX + anchorX end
+		if -offsetY + anchorY < minY then minY = -offsetY + anchorY end
+		if -offsetX + anchorX + size.x > maxX then maxX = -offsetX + anchorX + size.x end
+		if -offsetY + anchorY + size.y > maxY then maxY = -offsetY + anchorY + size.y end
 	end
 
 	local x = minX
