@@ -78,6 +78,14 @@ function RenderSystem:drawRenderable(e, r, dt)
 		anchorX, anchorY = r.size.x * -anchorX, r.size.y * -anchorY
 		love.graphics.rectangle(r.drawMode, mathutils.round(e.position.x + offsetX + anchorX), mathutils.round(e.position.y + offsetY + anchorY), r.size.x, r.size.y)
 		return
+	
+	elseif r.font and r.text then
+		if love.graphics.getFont() ~= r.font then
+			love.graphics.setFont(r.font)
+		end
+		love.graphics.print(r.text, e.position.x + offsetX, e.position.y + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
+		return
+		
 	end
 
 	love.graphics.draw(r.image or r.canvas or r.particleSystem, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
