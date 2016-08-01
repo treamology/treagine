@@ -80,6 +80,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 		return
 	
 	elseif r.font and r.text then
+		anchorX, anchorY = r.font:getWidth(r.text) * anchorX, r.font:getHeight() * anchorY
 		if love.graphics.getFont() ~= r.font then
 			love.graphics.setFont(r.font)
 		end
