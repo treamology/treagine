@@ -26,7 +26,7 @@ function Entity:getTrueBounds()
 
 	for _, r in pairs(self.renderList) do
 		local offsetX, offsetY = 0, 0
-		if r.offset then offsetX, offsetY = -r.offset.x, -r.offset.y end
+		if r.offset then offsetX, offsetY = r.offset.x, r.offset.y end
 
 		local animDimensions
 		if r.currentAnimation then
@@ -50,10 +50,10 @@ function Entity:getTrueBounds()
 		if r.anchor then anchorX, anchorY = r.anchor.x, r.anchor.y end
 		anchorX, anchorY = size.x * -anchorX, size.y * -anchorY
 
-		if -offsetX + anchorX < minX then minX = -offsetX + anchorX end
-		if -offsetY + anchorY < minY then minY = -offsetY + anchorY end
-		if -offsetX + anchorX + size.x > maxX then maxX = -offsetX + anchorX + size.x end
-		if -offsetY + anchorY + size.y > maxY then maxY = -offsetY + anchorY + size.y end
+		if offsetX + anchorX < minX then minX = offsetX + anchorX end
+		if offsetY + anchorY < minY then minY = offsetY + anchorY end
+		if offsetX + anchorX + size.x > maxX then maxX = offsetX + anchorX + size.x end
+		if offsetY + anchorY + size.y > maxY then maxY = offsetY + anchorY + size.y end
 	end
 
 	local x = minX
