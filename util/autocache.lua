@@ -29,7 +29,7 @@ local function newFont(name, ...)
 	return cachedFonts[name]
 end
 
-local function newImageFont(...)
+local function newImageFont(name, ...)
 	if cachedFonts[name] == nil then
 		print("Loading font " .. name)
 		cachedFonts[name] = new_image_font(name, ...)
