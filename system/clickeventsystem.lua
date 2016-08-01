@@ -7,16 +7,15 @@ local InputEventProcessor = require "treagine.input.inputeventprocessor"
 
 local MouseProcessor = require "treagine.input.mouseprocessor"
 
-local UISystem = tiny.system(class("UISystem"))
+local ClickEventSystem = tiny.system(class("ClickEventSystem"))
 
 local UI_PRESSED = "UI_PRESSED"
 local UI_RELEASED = "UI_RELEASED"
 local UI_HOVERED = "UI_HOVERED"
 
-function UISystem:init(screen)
+function ClickEventSystem:init(screen)
 	self.screen = screen
 
-	self.filter = tiny.requireAll("interceptsMouse")
 	self.runWhenPaused = true
 
 	self.pressedEntity = nil
@@ -25,7 +24,7 @@ function UISystem:init(screen)
 	beholder.observe(MouseProcessor.MOUSE_RELEASED, 1, function(istouch, x, y) self:mouseReleased(istouch, x, y) end)
 end
 
-function UISystem:mousePressed(istouch, x, y)
+function ClickEventSystem:mousePressed(istouch, x, y)
 	local hit = self:hitTest(x, y)
 
 	if hit then
@@ -34,7 +33,7 @@ function UISystem:mousePressed(istouch, x, y)
 	end
 end
 
-function UISystem:mouseReleased(istouch, x, y)
+function ClickEventSystem:mouseReleased(istouch, x, y)
 	local hit = self:hitTest(x, y)
 
 	if hit and self.pressedEntity == hit then
@@ -43,7 +42,7 @@ function UISystem:mouseReleased(istouch, x, y)
 	self.pressedEntity = nil
 end
 
-function UISystem:update(dt)
+function ClickEventSystem:update(dt)
 	local hit = self:hitTest(love.mouse.getPosition())
 
 	if hit then
@@ -53,7 +52,7 @@ function UISystem:update(dt)
 	end
 end
 
-function UISystem:hitTest(x, y)
+function ClickEventSystem:hitTest(x, y)
 	local hitEntity
 
 	for k, v in pairs(self.entities) do
@@ -69,4 +68,8 @@ function UISystem:hitTest(x, y)
 	return hitEntity
 end
 
-return UISystem
+function ClickEventSystem:filter(e)
+	return e.interceptsMouse
+end
+
+return ClickEventSystem
