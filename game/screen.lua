@@ -64,6 +64,12 @@ function Screen:getSystemByName(name)
 	end
 end
 
+function Screen:getEntityByName(name)
+	for _, entity in pairs(self.world.entities) do
+		print(entity.name)
+	end
+end
+
 function Screen:setViewport(viewport)
 	self.viewport = viewport
 	self.viewport:recalculate()
