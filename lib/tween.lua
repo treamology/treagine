@@ -330,6 +330,9 @@ function Tween:set(clock)
 
     self.clock = self.duration
     copyTables(self.subject, self.target)
+    if self.callback then
+      self.callback()
+    end
 
   else
 
@@ -352,7 +355,7 @@ end
 
 -- Public interface
 
-function tween.new(duration, subject, target, easing)
+function tween.new(duration, subject, target, easing, callback)
   easing = getEasingFunction(easing)
   checkNewParams(duration, subject, target, easing)
   return setmetatable({
@@ -360,6 +363,7 @@ function tween.new(duration, subject, target, easing)
     subject   = subject,
     target    = target,
     easing    = easing,
+    callback  = callback,
     clock     = 0
   }, Tween_mt)
 end
