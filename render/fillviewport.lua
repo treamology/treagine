@@ -61,4 +61,9 @@ function FillViewport:project(position)
 	return position
 end
 
+function FillViewport:projectScale(scale)
+	scale = scale * rsettings.scaleFactor * self.scale
+	return scale
+end
+
 return FillViewport
