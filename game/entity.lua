@@ -15,12 +15,6 @@ function Entity:getCenter()
 	return x, y
 end
 
-function Entity:setCenter(x, y)
-	local sizeX, sizeY = self:getSize()
-	self.position.x = x - (sizeX / 2)
-	self.position.y = y - (sizeY / 2)
-end
-
 function Entity:getTrueBounds()
 	local minX, minY, maxX, maxY = 0, 0, 0, 0
 
