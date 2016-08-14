@@ -64,7 +64,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 		if playAnim == nil then playAnim = true end
 
 		if not self.screen.paused or playAnim then r.currentAnimation:update(dt) end
-		r.currentAnimation:draw(r.image, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
+		r.currentAnimation:draw(r.image, mathutils.round(e.position.x + offsetX), mathutils.round(e.position.y + offsetY), rotation, scaleX, scaleY, anchorX, anchorY)
 		return
 
 	elseif r.image then
@@ -89,7 +89,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 		
 	end
 
-	love.graphics.draw(r.image or r.canvas or r.particleSystem, mathutils.round(e.position.x) + offsetX, mathutils.round(e.position.y) + offsetY, rotation, scaleX, scaleY, anchorX, anchorY)
+	love.graphics.draw(r.image or r.canvas or r.particleSystem, mathutils.round(e.position.x + offsetX), mathutils.round(e.position.y + offsetY), rotation, scaleX, scaleY, mathutils.round(anchorX), mathutils.round(anchorY))
 end
 
 function RenderSystem:preProcess(dt)
