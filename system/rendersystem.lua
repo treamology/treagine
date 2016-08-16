@@ -133,7 +133,6 @@ function RenderSystem:postProcess(dt)
 
 	for _, e in ipairs(self.offCanvasRenders) do
 		sortThenRender(self, e, dt)
-		print(e.position)
 	end
 
 	love.graphics.setColor(255, 255, 255, 255)
