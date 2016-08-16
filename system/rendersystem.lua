@@ -5,11 +5,25 @@ local mathutils = require "treagine.util.mathutils"
 
 local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
+local function sortThenRender(self, e, dt)
+	local orderedList = {}
+	for _, v in pairs(e.renderList) do
+		table.insert(orderedList, v)
+	end
+	table.sort(orderedList, function(a, b) return self:compare(a, b) end)
+
+	for _, r in ipairs(orderedList) do
+		self:drawRenderable(e, r, dt)
+	end
+end
+
 function RenderSystem:init(screen)
 	self.screen = screen
 
 	self.filter = tiny.requireAll("position", "renderList")
 	self.runWhenPaused = true
+
+	self.offCanvasRenders = {}
 
 	self.defaultShader = love.graphics.getShader()
 end
@@ -100,19 +114,15 @@ function RenderSystem:preProcess(dt)
 end
 
 function RenderSystem:process(e, dt)
-	local orderedList = {}
-	for _, v in pairs(e.renderList) do
-		table.insert(orderedList, v)
-	end
-	table.sort(orderedList, function(a, b) return self:compare(a, b) end)
-
 	if e.hidden then
 		return
 	end
-
-	for _, r in ipairs(orderedList) do
-		self:drawRenderable(e, r, dt)
+	if e.renderOnScreen then
+		table.insert(self.offCanvasRenders, e)
+		return
 	end
+
+	sortThenRender(self, e, dt)
 end
 
 function RenderSystem:postProcess(dt)
@@ -120,11 +130,21 @@ function RenderSystem:postProcess(dt)
 
 	love.graphics.setCanvas()
 	love.graphics.setBlendMode("alpha", "premultiplied")
+
+	for _, e in ipairs(self.offCanvasRenders) do
+		sortThenRender(self, e, dt)
+		print(e.position)
+	end
+
 	love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.setShader()
 	love.graphics.draw(self.screen.canvas, self.screen.viewport.position.x, self.screen.viewport.position.y, 0,
 		self.screen.viewport.size.x / self.screen.canvas:getWidth(), self.screen.viewport.size.y / self.screen.canvas:getHeight())
 	love.graphics.setBlendMode("alpha")
+
+	for k in ipairs(self.offCanvasRenders) do
+		self.offCanvasRenders[k] = nil
+	end
 end
 
 function RenderSystem:compare(e1, e2)

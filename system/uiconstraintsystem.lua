@@ -12,12 +12,18 @@ function UIConstraintSystem:init(screen)
 end
 
 function UIConstraintSystem:process(e, dt)
-	local cw, ch = self.screen.canvas:getDimensions()
-	local camx, camy = self.screen.camera.x, self.screen.camera.y
+	local cw, ch, camx, camy
+	if e.renderOnScreen then
+		cw, ch = love.graphics.getWidth(), love.graphics.getHeight()
+		camx, camy = 0, 0
+	else
+		cw, ch = self.screen.canvas:getDimensions()
+		camx, camy = self.screen.camera.x - cw / 2, self.screen.camera.y - ch / 2
+	end
 
 	local x, y = cw * e.uiAnchorPoint.x, ch * e.uiAnchorPoint.y
-	x = x + e.uiOffset.x + camx - cw / 2
-	y = y + e.uiOffset.y + camy - ch / 2
+	x = x + e.uiOffset.x + camx
+	y = y + e.uiOffset.y + camy
 
 	e.position.x = x
 	e.position.y = y
