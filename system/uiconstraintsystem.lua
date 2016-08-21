@@ -11,19 +11,33 @@ function UIConstraintSystem:init(screen)
 	self.filter = tiny.requireAll("uiAnchorPoint", "uiOffset")
 end
 
+function UIConstraintSystem:onAdd(e)
+	for _, v in pairs(e.renderList) do
+		v.scale = v.scale * love.window.getPixelScale()
+	end
+end
+
+function UIConstraintSystem:onRemove(e)
+	for _, v in pairs(e.renderList) do
+		v.scale = v.scale / love.window.getPixelScale()
+	end
+end
+
 function UIConstraintSystem:process(e, dt)
-	local cw, ch, camx, camy
+	local cw, ch, camx, camy, pixelScale
 	if e.renderOnScreen then
 		cw, ch = love.graphics.getWidth(), love.graphics.getHeight()
 		camx, camy = 0, 0
+		pixelScale = love.window.getPixelScale()
 	else
 		cw, ch = self.screen.canvas:getDimensions()
 		camx, camy = self.screen.camera.x - cw / 2, self.screen.camera.y - ch / 2
+		pixelScale = 1
 	end
 
 	local x, y = cw * e.uiAnchorPoint.x, ch * e.uiAnchorPoint.y
-	x = x + e.uiOffset.x + camx
-	y = y + e.uiOffset.y + camy
+	x = x + e.uiOffset.x * pixelScale + camx
+	y = y + e.uiOffset.y * pixelScale + camy
 
 	e.position.x = x
 	e.position.y = y
