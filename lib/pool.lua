@@ -26,7 +26,7 @@ function pool:free(obj)
 	assert(obj, "An object to be freed must be passed.")
 
 	table.insert(self.freeObjects, obj)
-	if obj.reset then obj.reset() end
+	if obj.reset then obj:reset() end
 end
 
 function pool:clear()
