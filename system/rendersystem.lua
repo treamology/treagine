@@ -28,6 +28,15 @@ function RenderSystem:init(screen)
 	self.defaultShader = love.graphics.getShader()
 end
 
+function RenderSystem:onAdd(e)
+	for _, r in pairs(e.renderList) do
+		if not r.scale then r.scale = vector(1, 1) end
+		if not r.offset then r.offset = vector(0, 0) end
+		if not r.anchor then r.anchor = vector(0, 0) end
+		if not r.rotation then r.rotation = 0 end
+	end
+end
+
 function RenderSystem:drawRenderable(e, r, dt)
 	if r.hidden then
 		return
@@ -63,12 +72,10 @@ function RenderSystem:drawRenderable(e, r, dt)
 		love.graphics.setShader()
 	end
 
-	local offsetX, offsetY, anchorX, anchorY, rotation, scaleX, scaleY
-
-	if r.offset then offsetX, offsetY = r.offset.x, r.offset.y else offsetX, offsetY = 0, 0 end
-	if r.rotation then rotation = r.rotation else rotation = 0 end
-	if r.scale then scaleX, scaleY = r.scale.x, r.scale.y else scaleX, scaleY = 1, 1 end
-	if r.anchor then anchorX, anchorY = r.anchor.x, r.anchor.y else anchorX, anchorY = 0, 0 end
+	local scaleX, scaleY = r.scale.x, r.scale.y
+	local offsetX, offsetY = r.offset.x, r.offset.y
+	local anchorX, anchorY = r.anchor.x, r.anchor.y
+	local rotation = r.rotation
 
 	if r.currentAnimation then
 		local sizeX, sizeY = r.currentAnimation:getDimensions()
