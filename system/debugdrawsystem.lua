@@ -33,11 +33,13 @@ function DebugDrawSystem:draw()
 
 		love.graphics.setColor(color)
 		for e in pairs(self.screen.world.entities) do
-			local x, y, w, h = e:getBoundingBox()
-			local px, py = self.screen.viewport:project(vector(x, y)):unpack()
-			w = w * rsettings.scaleFactor * self.screen.viewport.scale
-			h = h * rsettings.scaleFactor * self.screen.viewport.scale
-			love.graphics.rectangle(mode, px, py, w, h)
+			if not e.renderOnScreen then
+				local x, y, w, h = e:getBoundingBox()
+				local px, py = self.screen.viewport:project(vector(x, y)):unpack()
+				w = w * rsettings.scaleFactor * self.screen.viewport.scale
+				h = h * rsettings.scaleFactor * self.screen.viewport.scale
+				love.graphics.rectangle(mode, px, py, w, h)
+			end
 		end
 	end
 
@@ -47,11 +49,13 @@ function DebugDrawSystem:draw()
 
 		love.graphics.setColor(color)
 		for e in pairs(self.screen.world.entities) do
-			local x = e.position.x
-			local y = e.position.y
-			local px, py = self.screen.viewport:project(vector(x, y)):unpack()
+			if not e.renderOnScreen then
+				local x = e.position.x
+				local y = e.position.y
+				local px, py = self.screen.viewport:project(vector(x, y)):unpack()
 
-			love.graphics.circle(mode, px, py, 2, 4)
+				love.graphics.circle(mode, px, py, 2, 4)
+			end
 		end
 	end
 
@@ -61,10 +65,12 @@ function DebugDrawSystem:draw()
 
 		love.graphics.setColor(color)
 		for e in pairs(self.screen.world.entities) do
-			local x, y = e:getCenter()
-			local px, py = self.screen.viewport:project(vector(x, y)):unpack()
+			if not e.renderOnScreen then
+				local x, y = e:getCenter()
+				local px, py = self.screen.viewport:project(vector(x, y)):unpack()
 
-			love.graphics.circle(mode, px, py, 2, 4)
+				love.graphics.circle(mode, px, py, 2, 4)
+			end
 		end
 	end
 	
