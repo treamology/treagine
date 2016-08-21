@@ -24,6 +24,7 @@ function DebugDrawSystem:draw()
 	if self.drawFPS then
 		local r, g, b, a = love.graphics.getBackgroundColor()
 		love.graphics.setColor(255 - r, 255 - g, 255 - b, 255)
+		love.graphics.setDefaultFont()
 		love.graphics.print(tostring(love.timer.getFPS()) .. " fps", 0, 0)
 	end
 

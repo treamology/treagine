@@ -45,4 +45,8 @@ love.graphics.newImageFont = newImageFont
 autocache.cachedImages = cachedImages
 autocache.cachedFonts = cachedFonts
 
+-- cache what is assumed to be the default font
+autocache.cachedFonts["default"] = love.graphics.getFont()
+love.graphics.setDefaultFont = function() love.graphics.setFont(autocache.cachedFonts["default"]) end
+
 return autocache
