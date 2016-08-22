@@ -9,6 +9,7 @@ function UIConstraintSystem:init(screen)
 	self.screen = screen
 
 	self.filter = tiny.requireAll("uiAnchorPoint", "uiOffset")
+	self.runWhenPaused = true
 end
 
 function UIConstraintSystem:onAdd(e)
