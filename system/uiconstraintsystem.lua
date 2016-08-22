@@ -36,6 +36,12 @@ function UIConstraintSystem:process(e, dt)
 		pixelScale = 1
 	end
 
+	if e.resizeToFullscreen then
+		for _, r in pairs(e.renderList) do
+			r.size.x, r.size.y = cw, ch
+		end
+	end
+
 	local x, y = cw * e.uiAnchorPoint.x, ch * e.uiAnchorPoint.y
 	x = x + e.uiOffset.x * pixelScale + camx
 	y = y + e.uiOffset.y * pixelScale + camy
