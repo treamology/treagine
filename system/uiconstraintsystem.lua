@@ -12,24 +12,24 @@ function UIConstraintSystem:init(screen)
 	self.runWhenPaused = true
 end
 
-function UIConstraintSystem:onAdd(e)
-	for _, v in pairs(e.renderList) do
-		v.scale = v.scale * love.window.getPixelScale()
-	end
-end
+-- function UIConstraintSystem:onAdd(e)
+-- 	for _, v in pairs(e.renderList) do
+-- 		v.scale = v.scale * love.window.getPixelScale()
+-- 	end
+-- end
 
-function UIConstraintSystem:onRemove(e)
-	for _, v in pairs(e.renderList) do
-		v.scale = v.scale / love.window.getPixelScale()
-	end
-end
+-- function UIConstraintSystem:onRemove(e)
+-- 	for _, v in pairs(e.renderList) do
+-- 		v.scale = v.scale / love.window.getPixelScale()
+-- 	end
+-- end
 
 function UIConstraintSystem:process(e, dt)
 	local cw, ch, camx, camy, pixelScale
 	if e.renderOnScreen then
 		cw, ch = love.graphics.getWidth(), love.graphics.getHeight()
 		camx, camy = 0, 0
-		pixelScale = love.window.getPixelScale()
+		pixelScale = 1
 	else
 		cw, ch = self.screen.canvas:getDimensions()
 		camx, camy = self.screen.camera.x - cw / 2, self.screen.camera.y - ch / 2

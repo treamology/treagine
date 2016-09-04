@@ -5,7 +5,7 @@ local mathutils = require "treagine.util.mathutils"
 
 local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
 
-local function sortThenRender(self, e, dt)
+local function sortThenRender(self, e, dt, pixelScale)
 	local orderedList = {}
 	for _, v in pairs(e.renderList) do
 		table.insert(orderedList, v)
@@ -13,7 +13,7 @@ local function sortThenRender(self, e, dt)
 	table.sort(orderedList, function(a, b) return self:compare(a, b) end)
 
 	for _, r in ipairs(orderedList) do
-		self:drawRenderable(e, r, dt)
+		self:drawRenderable(e, r, dt, pixelScale)
 	end
 end
 
@@ -37,10 +37,12 @@ function RenderSystem:onAdd(e)
 	end
 end
 
-function RenderSystem:drawRenderable(e, r, dt)
+function RenderSystem:drawRenderable(e, r, dt, pixelScale)
 	if r.hidden then
 		return
 	end
+
+	local pixelScale = pixelScale or 1
 
 	love.graphics.setColor(r.color or e.color or 255, 255, 255, 255)
 
@@ -72,11 +74,16 @@ function RenderSystem:drawRenderable(e, r, dt)
 		love.graphics.setShader()
 	end
 
-	local eScaleX, eScaleY = e.scale.x or 1, e.scale.y or 1
+	local eScale = e.scale or vector(1, 1)
+	local eScaleX, eScaleY = eScale.x, eScale.y
 	local scaleX, scaleY = r.scale.x, r.scale.y
 	local offsetX, offsetY = r.offset.x, r.offset.y
 	local anchorX, anchorY = r.anchor.x, r.anchor.y
 	local rotation = r.rotation
+
+	local eScaleX, eScaleY = eScaleX * pixelScale, eScaleY * pixelScale
+	--local scaleX, scaleY = scaleX * pixelScale, scaleY * pixelScale
+	local offsetX, offsetY = offsetX * eScaleX, offsetY * eScaleY
 
 	if r.currentAnimation then
 		local sizeX, sizeY = r.currentAnimation:getDimensions()
@@ -146,7 +153,7 @@ function RenderSystem:postProcess(dt)
 	love.graphics.setBlendMode("alpha")
 
 	for _, e in ipairs(self.offCanvasRenders) do
-		sortThenRender(self, e, dt)
+		sortThenRender(self, e, dt, love.window.getPixelScale())
 	end
 
 	for k in ipairs(self.offCanvasRenders) do
