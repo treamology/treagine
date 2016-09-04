@@ -61,6 +61,19 @@ function FillViewport:project(position)
 	return position
 end
 
+function FillViewport:projectLight(x, y)
+	local rx, ry = 0, 0
+	
+	if self.camera then
+		rx, ry = self.camera:cameraCoords(x, y)
+	end
+
+	rx = (rx * rsettings.scaleFactor * self.scale) + self.position.x
+	ry = (ry * rsettings.scaleFactor * self.scale) + self.position.y
+
+	return rx, ry
+end
+
 function FillViewport:projectScale(scale)
 	scale = scale * rsettings.scaleFactor * self.scale
 	return scale
