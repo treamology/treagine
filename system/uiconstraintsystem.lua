@@ -12,18 +12,6 @@ function UIConstraintSystem:init(screen)
 	self.runWhenPaused = true
 end
 
--- function UIConstraintSystem:onAdd(e)
--- 	for _, v in pairs(e.renderList) do
--- 		v.scale = v.scale * love.window.getPixelScale()
--- 	end
--- end
-
--- function UIConstraintSystem:onRemove(e)
--- 	for _, v in pairs(e.renderList) do
--- 		v.scale = v.scale / love.window.getPixelScale()
--- 	end
--- end
-
 function UIConstraintSystem:process(e, dt)
 	local cw, ch, camx, camy, pixelScale
 	if e.renderOnScreen then
