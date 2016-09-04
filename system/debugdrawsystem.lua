@@ -7,6 +7,7 @@ local DebugDrawSystem = class("DebugDrawSystem")
 
 function DebugDrawSystem:init(screen)
 	self.rectList = {}
+	self.lineList = {}
 	self.drawFPS = false
 	self.showEntityBounds = false
 	self.showEntityAnchors = false
@@ -14,6 +15,7 @@ function DebugDrawSystem:init(screen)
 	self.screen = screen
 
 	beholder.observe("debug", "drawRectangle", function(table) self:addRectangle(table) end)
+	beholder.observe("debug", "drawLine", function(table) self:addLine(table) end)
 	beholder.observe("debug", "showEntityBounds", function(bool) self.showEntityBounds = bool end)
 	beholder.observe("debug", "showEntityAnchors", function(bool) self.showEntityAnchors = bool end)
 end
@@ -90,13 +92,30 @@ function DebugDrawSystem:draw()
 		end
 	end
 
+	for k, v in pairs(self.lineList) do
+		local color = v.color or {255, 0, 0, 255}
+
+		local px1, py1 = self.screen.viewport:projectLight(v.x1, v.y1)
+		local px2, py2 = self.screen.viewport:projectLight(v.x2, v.y2)
+
+		love.graphics.setColor(color)
+		love.graphics.line(px1, py1, px2, py2)
+	end
+
 	for k, v in pairs(self.rectList) do
 		self.rectList[k] = nil
+	end
+	for k, v in pairs(self.lineList) do
+		self.lineList[k] = nil
 	end
 end
 
 function DebugDrawSystem:addRectangle(rect)
 	table.insert(self.rectList, rect)
+end
+
+function DebugDrawSystem:addLine(line)
+	table.insert(self.lineList, line)
 end
 
 return DebugDrawSystem
