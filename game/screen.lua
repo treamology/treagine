@@ -33,6 +33,12 @@ function Screen:load()
 	self.world:addSystem(RenderSystem(self))
 end
 
+function Screen:unload()
+	for _, system in ipairs(self.world.systems) do
+		self.world:removeSystem(system)
+	end
+end
+
 function Screen:start()
 	tiny.refresh(self.world)
 	self.started = true
