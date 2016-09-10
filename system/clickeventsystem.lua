@@ -20,8 +20,13 @@ function ClickEventSystem:init(screen)
 
 	self.pressedEntity = nil
 
-	beholder.observe(MouseProcessor.MOUSE_PRESSED, 1, function(istouch, x, y) self:mousePressed(istouch, x, y) end)
-	beholder.observe(MouseProcessor.MOUSE_RELEASED, 1, function(istouch, x, y) self:mouseReleased(istouch, x, y) end)
+	self.mousePressedEvent = beholder.observe(MouseProcessor.MOUSE_PRESSED, 1, function(istouch, x, y) self:mousePressed(istouch, x, y) end)
+	self.mouseReleasedEvent = beholder.observe(MouseProcessor.MOUSE_RELEASED, 1, function(istouch, x, y) self:mouseReleased(istouch, x, y) end)
+end
+
+function ClickEventSystem:onRemoveFromWorld(world)
+	beholder.stopObserving(self.mousePressedEvent)
+	beholder.stopObserving(self.mouseReleasedEvent)
 end
 
 function ClickEventSystem:mousePressed(istouch, x, y)
