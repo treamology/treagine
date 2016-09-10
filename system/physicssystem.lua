@@ -27,18 +27,25 @@ function PhysicsSystem:init()
 	self.prevPositions = {}
 	self.currentPositions = {}
 
-	beholder.observe(ACCEL_EVENT, function(e, accelRate, targetVelocity, axis)
+	self.accelEvent = beholder.observe(ACCEL_EVENT, function(e, accelRate, targetVelocity, axis)
 		self:setAcceleration(e, accelRate, targetVelocity, axis)
 	end)
-	beholder.observe(STOP_MOVING_EVENT, function(e, axis)
+	self.stopMovingEvent = beholder.observe(STOP_MOVING_EVENT, function(e, axis)
 		self:stopMoving(e, axis)
 	end)
-	beholder.observe(SET_POSITION, function(e, position)
+	self.setPositionEvent = beholder.observe(SET_POSITION, function(e, position)
 		self:setPosition(e, position)
 	end)
-	beholder.observe(SET_VELOCITY, function(e, velocity, axis)
+	self.setVelocityEvent = beholder.observe(SET_VELOCITY, function(e, velocity, axis)
 		self:setVelocity(e, velocity, axis)
 	end)
+end
+
+function PhysicsSystem:onRemoveFromWorld(world)
+	beholder.stopObserving(self.accelEvent)
+	beholder.stopObserving(self.stopMovingEvent)
+	beholder.stopObserving(self.setPositionEvent)
+	beholder.stopObserving(self.setVelocityEvent)
 end
 
 function PhysicsSystem:onAdd(e)

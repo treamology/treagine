@@ -37,6 +37,8 @@ function Screen:unload()
 	for _, system in ipairs(self.world.systems) do
 		self.world:removeSystem(system)
 	end
+	self.world:refresh()
+	self.world = nil
 end
 
 function Screen:start()
