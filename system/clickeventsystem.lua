@@ -58,6 +58,7 @@ function ClickEventSystem:update(dt)
 end
 
 function ClickEventSystem:hitTest(x, y)
+	if self.world == nil then return end
 	local hitEntity
 
 	for k, v in pairs(self.entities) do
