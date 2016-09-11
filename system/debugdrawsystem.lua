@@ -84,8 +84,13 @@ function DebugDrawSystem:draw()
 			local color = v.color or {255, 0, 0, 255}
 			local mode = v.mode or "line"
 			local pos = v.position:clone() or vector(0, 0)
-			local projPosX, projPosY = self.screen.viewport:project(pos):unpack()
-			v.size = v.size * rsettings.scaleFactor * self.screen.viewport.scale
+			local projPosX, projPosY
+			if v.screenSpace then
+				projPosX, projPosY = pos:unpack()
+			else
+				v.size = v.size * rsettings.scaleFactor * self.screen.viewport.scale
+				projPosX, projPosY = self.screen.viewport:project(pos):unpack()
+			end
 
 			love.graphics.setColor(color)
 			love.graphics.rectangle(mode, projPosX, projPosY, v.size:unpack())
