@@ -17,7 +17,7 @@ function UIConstraintSystem:process(e, dt)
 	if e.renderOnScreen then
 		cw, ch = love.graphics.getWidth(), love.graphics.getHeight()
 		camx, camy = 0, 0
-		pixelScale = 1
+		pixelScale = love.window.getPixelScale()
 	else
 		cw, ch = self.screen.canvas:getDimensions()
 		camx, camy = self.screen.camera.x - cw / 2, self.screen.camera.y - ch / 2
