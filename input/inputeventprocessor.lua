@@ -8,9 +8,14 @@ local inputs = {}
 local eventState = {}
 
 local INPUT_EVENT = "INPUT_EVENT"
+local TRIGGER_EVENT = "TRIGGER_EVENT"
 
 function InputEventProcessor.init(input)
 	inputs = input
+
+	beholder.observe(TRIGGER_EVENT, function(event, value)
+		eventState[event] = value
+	end) 
 end
 
 function InputEventProcessor.update()
@@ -44,5 +49,6 @@ end
 InputEventProcessor.eventState = eventState
 
 InputEventProcessor.INPUT_EVENT = INPUT_EVENT
+InputEventProcessor.TRIGGER_EVENT = TRIGGER_EVENT
 
 return InputEventProcessor
