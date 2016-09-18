@@ -3,6 +3,7 @@ local beholder = require "treagine.lib.beholder"
 local MouseProcessor = {}
 
 local mouseState = {}
+local prevJustPressed = {}
 
 local MOUSE_PRESSED = "MOUSE_PRESSED"
 local MOUSE_HELD = "MOUSE_HELD"
@@ -29,9 +30,14 @@ function MouseProcessor.update()
 
 		beholder.trigger(MOUSE_HELD, k, v.istouch, ux, uy)
 
-		mouseState[k].justPressed = false
+		if prevJustPressed[k] then
+			mouseState[k].justPressed = false
+		end
+
 		mouseState[k].x = ux
 		mouseState[k].u = uy
+
+		prevJustPressed[k] = mouseState[k].justPressed
 	end
 end
 
