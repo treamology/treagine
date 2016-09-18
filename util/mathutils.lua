@@ -33,4 +33,11 @@ function mathutils.headingToRadians(heading)
 	return math.atan2(heading.y, heading.x)
 end
 
+function mathutils.pointInsideRect(x, y, boundX, boundY, boundW, boundH)
+	if x > boundX and y < boundY + boundW and y > boundY and y < boundY + boundH then
+        return true
+    end
+    return false
+end
+
 return mathutils
