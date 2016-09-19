@@ -34,7 +34,7 @@ function mathutils.headingToRadians(heading)
 end
 
 function mathutils.pointInsideRect(x, y, boundX, boundY, boundW, boundH)
-	if x > boundX and x < boundY + boundW and y > boundY and y < boundY + boundH then
+	if x > boundX and x < boundX + boundW and y > boundY and y < boundY + boundH then
         return true
     end
     return false
