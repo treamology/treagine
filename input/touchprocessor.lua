@@ -23,6 +23,7 @@ end
 
 function TouchProcessor.touchReleased(id, x, y, dx, dy, pressure)
 	touches[id] = nil
+	beholder.trigger("touch_released", id, x, y)
 end
 
 function TouchProcessor.touchValid(id)
