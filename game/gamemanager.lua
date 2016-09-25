@@ -17,6 +17,7 @@ function GameManager:init(name)
 		self.currentScreen = screen
 		self.currentScreen:load()
 		self.currentScreen:start()
+		beholder.trigger("SCREEN_SWITCHED", screen)
 	end)
 	beholder.observe("UNLOAD_CURRENT_SCREEN", function()
 		self.currentScreen:unload()
@@ -31,6 +32,7 @@ function GameManager:init(name)
 			self.currentScreen = screen
 			self.currentScreen:start()
 			self.queuedScreen = nil
+			beholder.trigger("SCREEN_SWITCHED", screen)
 		end
 	end)
 end

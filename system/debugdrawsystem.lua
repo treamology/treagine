@@ -20,9 +20,14 @@ function DebugDrawSystem:init(screen)
 	beholder.observe("debug", "drawPoint", function(table) self:addPoint(table) end)
 	beholder.observe("debug", "showEntityBounds", function(bool) self.showEntityBounds = bool end)
 	beholder.observe("debug", "showEntityAnchors", function(bool) self.showEntityAnchors = bool end)
+
+	beholder.observe("SCREEN_SWITCHED", function(screen)
+		self.screen = screen
+	end)
 end
 
 function DebugDrawSystem:draw()
+	if not self.screen.world then return end
 	love.graphics.setBlendMode("alpha")
 
 	if self.drawFPS then
