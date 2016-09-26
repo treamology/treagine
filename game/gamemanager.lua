@@ -1,3 +1,8 @@
+--- Starting point for the game.
+-- All initialization should be done here (prefereably a subclass).
+-- Mostly responsible for loading and switching between screens.
+-- @classmod GameManager
+
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
 
@@ -6,8 +11,11 @@ local FillViewport = require "treagine.render.fillviewport"
 local GameManager = class("GameManager")
 
 function GameManager:init(name)
+	--- Name of the game that appears in the titlebar.
+	-- @ivar gameName
 	self.gameName = name or "Game"
 
+	--- The currently loaded screen that hasn't been shown yet.
 	self.queuedScreen = nil
 
 	beholder.observe("SWITCH_SCREEN", function(screen)

@@ -1,3 +1,6 @@
 # sublime stuff
 *.sublime-project
 *.sublime-workspace
+
+# documentation
+doc/
