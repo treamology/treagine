@@ -1,6 +1,6 @@
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
-local rsettings = require "treagine.render.rendersettings"
+local gameconfig = require "treagine.config.gameconfig"
 local vector = require "treagine.lib.vector"
 
 local DebugDrawSystem = class("DebugDrawSystem")
@@ -46,8 +46,8 @@ function DebugDrawSystem:draw()
 			if not e.renderOnScreen then
 				local x, y, w, h = e:getBoundingBox()
 				local px, py = self.screen.viewport:project(vector(x, y)):unpack()
-				w = w * rsettings.scaleFactor * self.screen.viewport.scale
-				h = h * rsettings.scaleFactor * self.screen.viewport.scale
+				w = w * gameconfig.render.scaleFactor * self.screen.viewport.scale
+				h = h * gameconfig.render.scaleFactor * self.screen.viewport.scale
 				love.graphics.rectangle(mode, px, py, w, h)
 			end
 		end
@@ -93,7 +93,7 @@ function DebugDrawSystem:draw()
 			if v.screenSpace then
 				projPosX, projPosY = pos:unpack()
 			else
-				v.size = v.size * rsettings.scaleFactor * self.screen.viewport.scale
+				v.size = v.size * gameconfig.render.scaleFactor * self.screen.viewport.scale
 				projPosX, projPosY = self.screen.viewport:project(pos):unpack()
 			end
 

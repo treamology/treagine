@@ -6,7 +6,7 @@ local RenderSystem = require "treagine.system.rendersystem"
 local UpdateSystem = require "treagine.system.updatesystem"
 
 local FillViewport = require "treagine.render.fillviewport"
-local rsettings = require "treagine.render.rendersettings"
+local gameconfig = require "treagine.config.gameconfig"
 
 local Screen = class("Screen")
 
@@ -51,15 +51,15 @@ end
 
 function Screen:update(dt)
 	if self.paused then
-		tiny.update(self.world, dt * rsettings.timeScale, tiny.requireAll("runWhenPaused", tiny.rejectAll("drawsToScreen")))
+		tiny.update(self.world, dt * gameconfig.render.timeScale, tiny.requireAll("runWhenPaused", tiny.rejectAll("drawsToScreen")))
 	else
-		tiny.update(self.world, dt * rsettings.timeScale, tiny.rejectAll("drawsToScreen"))
+		tiny.update(self.world, dt * gameconfig.render.timeScale, tiny.rejectAll("drawsToScreen"))
 	end
 end
 
 function Screen:draw()
 	love.graphics.setBackgroundColor(self.backgroundColor)
-	tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale, tiny.requireAll("drawsToScreen"))
+	tiny.update(self.world, love.timer.getDelta() * gameconfig.render.timeScale, tiny.requireAll("drawsToScreen"))
 end
 
 function Screen:resize(w, h)

@@ -5,7 +5,7 @@
 
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
-local gameconfig = require "treagine.game.gameconfig"
+local gameconfig = require "treagine.config.gameconfig"
 
 local FillViewport = require "treagine.render.fillviewport"
 

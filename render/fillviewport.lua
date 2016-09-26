@@ -2,13 +2,13 @@ local class = require "treagine.lib.30log"
 local vector = require "treagine.lib.vector"
 
 local math = require "treagine.util.mathutils"
-local rsettings = require "treagine.render.rendersettings"
+local gameconfig = require "treagine.config.gameconfig"
 
 local FillViewport = class("FillViewport")
 
 function FillViewport:init()
 	self.position = vector(0, 0)
-	self.size = vector(rsettings.targetWidth, rsettings.targetHeight)
+	self.size = vector(gameconfig.render.targetWidth, gameconfig.render.targetHeight)
 	self.scale = 1
 
 	return self
@@ -19,8 +19,8 @@ function FillViewport:recalculate()
 	-- (some parts of the viewport may be cut off at times)
 	-- must be called at least once before the game begins
 	
-	local sourceWidth = rsettings.targetWidth
-	local sourceHeight = rsettings.targetHeight
+	local sourceWidth = gameconfig.render.targetWidth
+	local sourceHeight = gameconfig.render.targetHeight
 	local targetWidth = love.graphics.getWidth()
 	local targetHeight = love.graphics.getHeight()
 
@@ -41,7 +41,7 @@ end
 
 function FillViewport:unproject(position)
 	position = position - self.position
-	position = position / rsettings.scaleFactor / self.scale
+	position = position / gameconfig.render.scaleFactor / self.scale
 	
 	if self.camera then
 		position.x, position.y = self.camera:worldCoords(position.x, position.y)
@@ -55,7 +55,7 @@ function FillViewport:project(position)
 		position.x, position.y = self.camera:cameraCoords(position.x, position.y)
 	end
 
-	position = position * rsettings.scaleFactor * self.scale
+	position = position * gameconfig.render.scaleFactor * self.scale
 	position = position + self.position
 	
 	return position
@@ -68,14 +68,14 @@ function FillViewport:projectLight(x, y)
 		rx, ry = self.camera:cameraCoords(x, y)
 	end
 
-	rx = (rx * rsettings.scaleFactor * self.scale) + self.position.x
-	ry = (ry * rsettings.scaleFactor * self.scale) + self.position.y
+	rx = (rx * gameconfig.render.scaleFactor * self.scale) + self.position.x
+	ry = (ry * gameconfig.render.scaleFactor * self.scale) + self.position.y
 
 	return rx, ry
 end
 
 function FillViewport:projectScale(scale)
-	scale = scale * rsettings.scaleFactor * self.scale
+	scale = scale * gameconfig.render.scaleFactor * self.scale
 	return scale
 end
 
