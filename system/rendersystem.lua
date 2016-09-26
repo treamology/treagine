@@ -21,7 +21,7 @@ function RenderSystem:init(screen)
 	self.screen = screen
 
 	self.filter = tiny.requireAll("position", "renderList")
-	self.runWhenPaused = true
+	self.drawsToScreen = true
 
 	self.offCanvasRenders = {}
 

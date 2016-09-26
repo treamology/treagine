@@ -5,6 +5,7 @@
 
 local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
+local gameconfig = require "treagine.game.gameconfig"
 
 local FillViewport = require "treagine.render.fillviewport"
 
@@ -51,6 +52,10 @@ end
 
 function GameManager:update(dt)
 	if self.currentScreen and self.currentScreen.started then self.currentScreen:update(dt) end
+end
+
+function GameManager:draw()
+	if self.currentScreen then self.currentScreen:draw() end
 end
 
 function GameManager:resize(w, h)

@@ -49,13 +49,17 @@ function Screen:start()
 	self.started = true
 end
 
-function Screen:update()
-	love.graphics.setBackgroundColor(self.backgroundColor)
+function Screen:update(dt)
 	if self.paused then
-		tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale, tiny.requireAll("runWhenPaused"))
+		tiny.update(self.world, dt * rsettings.timeScale, tiny.requireAll("runWhenPaused", tiny.rejectAll("drawsToScreen")))
 	else
-		tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale)
+		tiny.update(self.world, dt * rsettings.timeScale, tiny.rejectAll("drawsToScreen"))
 	end
+end
+
+function Screen:draw()
+	love.graphics.setBackgroundColor(self.backgroundColor)
+	tiny.update(self.world, love.timer.getDelta() * rsettings.timeScale, tiny.requireAll("drawsToScreen"))
 end
 
 function Screen:resize(w, h)
