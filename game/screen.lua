@@ -3,6 +3,8 @@ local tiny = require "treagine.lib.tiny"
 local Camera = require "treagine.lib.camera"
 
 local RenderSystem = require "treagine.system.rendersystem"
+local UpdateSystem = require "treagine.system.updatesystem"
+
 local FillViewport = require "treagine.render.fillviewport"
 local rsettings = require "treagine.render.rendersettings"
 
@@ -30,6 +32,7 @@ function Screen:load()
 		self.world:addSystem(v(self))
 	end
 
+	self.world:addSystem(UpdateSystem(self))
 	self.world:addSystem(RenderSystem(self))
 end
 
@@ -69,12 +72,6 @@ function Screen:getSystemByName(name)
 		if system.name == name then
 			return system
 		end
-	end
-end
-
-function Screen:getEntityByName(name)
-	for _, entity in pairs(self.world.entities) do
-		print(entity.name)
 	end
 end
 
