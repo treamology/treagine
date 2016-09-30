@@ -10,6 +10,11 @@ local gameconfig = require "treagine.config.gameconfig"
 
 local Screen = class("Screen")
 
+local probe
+if gameconfig.profileMode then
+	probe = require "treagine.lib.probe"
+end
+
 function Screen:init(systems, canvas, viewport, camera)
 	self.backgroundColor = {0, 0, 0, 0}
 	self.systems = systems or {}
@@ -23,6 +28,11 @@ function Screen:init(systems, canvas, viewport, camera)
 
 	self.started = false
 	self.paused = false
+
+	if gameconfig.profileMode then
+		self.dProbe = probe.new(60)
+		self.uProbe = probe.new(60)
+	end
 end
 
 function Screen:load()
@@ -32,8 +42,29 @@ function Screen:load()
 		self.world:addSystem(v(self))
 	end
 
+	if gameconfig.profileMode then
+		self.world:refresh()
+		self.uProbe:hookAll(self.world.systems, "process", {self.world})
+		self.uProbe:hookAll(self.world.systems, "update", {self.world})
+		self.uProbe:hookAll(self.world.systems, "preProcess", {self.world})
+		self.uProbe:hookAll(self.world.systems, "postProcess", {self.world})
+
+		self.uProbe:enable(true)
+	end
+
 	self.world:addSystem(UpdateSystem(self))
-	self.world:addSystem(RenderSystem(self))
+
+	local rs = RenderSystem(self)
+	self.world:addSystem(rs)
+
+	if gameconfig.profileMode then
+		self.dProbe:hook(rs, "drawRenderable", rs.name)
+		self.dProbe:hook(rs, "process", rs.name)
+		self.dProbe:hook(rs, "postProcess", rs.name)
+		self.dProbe:hook(rs, "preProcess", rs.name)
+		self.dProbe:enable(true)
+	end
+	--collectgarbage("stop")
 end
 
 function Screen:unload()
@@ -42,6 +73,13 @@ function Screen:unload()
 	end
 	self.world:refresh()
 	self.world = nil
+
+	if gameconfig.profileMode then
+		self.dProbe:enable(false)
+		self.dProbe = nil
+		self.uProbe:enable(false)
+		self.uProbe = nil
+	end
 end
 
 function Screen:start()
@@ -50,16 +88,35 @@ function Screen:start()
 end
 
 function Screen:update(dt)
+	if gameconfig.profileMode then
+		self.uProbe:startCycle()
+	end
 	if self.paused then
 		tiny.update(self.world, dt * gameconfig.render.timeScale, tiny.requireAll("runWhenPaused", tiny.rejectAll("drawsToScreen")))
 	else
 		tiny.update(self.world, dt * gameconfig.render.timeScale, tiny.rejectAll("drawsToScreen"))
 	end
+	if gameconfig.profileMode then
+		self.uProbe:endCycle()
+	end
+	--print(collectgarbage("count"))
 end
 
 function Screen:draw()
+	if gameconfig.profileMode then
+		self.dProbe:startCycle()
+	end
 	love.graphics.setBackgroundColor(self.backgroundColor)
 	tiny.update(self.world, love.timer.getDelta() * gameconfig.render.timeScale, tiny.requireAll("drawsToScreen"))
+	if gameconfig.profileMode then
+		self.dProbe:endCycle()
+
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.setCanvas()
+		local ps = love.window.getPixelScale()
+		self.dProbe:draw(20, 20, 150 * ps, 560 * ps, "Draw Cycle")
+		self.uProbe:draw(630, 20, 150 * ps, 560 * ps, "Update Cycle")
+	end
 end
 
 function Screen:resize(w, h)

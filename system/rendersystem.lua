@@ -71,7 +71,7 @@ function RenderSystem:drawRenderable(e, r, dt, pixelScale)
 
 		love.graphics.setShader(e.shader)
 	else
-		love.graphics.setShader()
+		--love.graphics.setShader()
 	end
 
 	local eScale = e.scale or vector(1, 1)
