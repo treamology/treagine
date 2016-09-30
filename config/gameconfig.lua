@@ -4,6 +4,7 @@ gameconfig.debugMode = false
 gameconfig.profileMode = false
 
 gameconfig.currentOS = love.system.getOS()
+gameconfig.pixelScale = love.window.getPixelScale()
 
 gameconfig.render = {
 	scaleFactor = 1,
