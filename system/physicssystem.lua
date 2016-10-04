@@ -49,6 +49,9 @@ function PhysicsSystem:onRemoveFromWorld(world)
 end
 
 function PhysicsSystem:onAdd(e)
+	if e.velocity then
+		e.velocity.x, e.velocity.y = 0, 0
+	end
 	local x, y, width, height = e:getBoundingBox()
 	self.collWorld:add(e, x, y, width, height)
 	self.collisions[e] = {}
