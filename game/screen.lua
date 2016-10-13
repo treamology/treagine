@@ -139,11 +139,11 @@ function Screen:getSystemByName(name)
 			return system
 		end
 	end
-	for _, system in pairs(self.world.systemsToAdd) do
-		if system.name == name then
-			return system
-		end
-	end
+	-- for _, system in pairs(self.world.systemsToAdd) do
+	-- 	if system.name == name then
+	-- 		return system
+	-- 	end
+	-- end
 end
 
 function Screen:setViewport(viewport)
