@@ -64,6 +64,12 @@ function Screen:load()
 		self.dProbe:hook(rs, "preProcess", rs.name)
 		self.dProbe:enable(true)
 	end
+
+	self.world:refresh()
+	for i = 1, #self.world.systems do
+		local system = self.world.systems[i]
+		system:awake()
+	end
 	--collectgarbage("stop")
 end
 
@@ -83,7 +89,11 @@ function Screen:unload()
 end
 
 function Screen:start()
-	tiny.refresh(self.world)
+	self.world:refresh()
+	for i = 1, #self.world.systems do
+		local system = self.world.systems[i]
+		system:start()
+	end
 	self.started = true
 end
 
