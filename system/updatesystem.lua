@@ -14,7 +14,7 @@ function UpdateSystem:init(screen)
 end
 
 function UpdateSystem:process(e, dt)
-	e:update(dt)
+	e:update(dt, self.screen)
 end
 
 return UpdateSystem
