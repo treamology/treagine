@@ -3,11 +3,13 @@ local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
 local vector = require "treagine.lib.vector"
 
+local System = require "treagine.system.system"
+
 local InputEventProcessor = require "treagine.input.inputeventprocessor"
 
 local MouseProcessor = require "treagine.input.mouseprocessor"
 
-local ClickEventSystem = tiny.system(class("ClickEventSystem"))
+local ClickEventSystem = tiny.system(System:extend("ClickEventSystem"))
 
 local UI_PRESSED = "UI_PRESSED"
 local UI_RELEASED = "UI_RELEASED"

@@ -3,7 +3,9 @@ local beholder = require "treagine.lib.beholder"
 local vector = require "treagine.lib.vector"
 local tiny = require "treagine.lib.tiny"
 
-local UpdateSystem = tiny.processingSystem(class("UpdateSystem"))
+local System = require "treagine.system.system"
+
+local UpdateSystem = tiny.processingSystem(System:extend("UpdateSystem"))
 
 function UpdateSystem:init(screen)
 	self.screen = screen

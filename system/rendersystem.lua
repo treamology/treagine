@@ -3,7 +3,9 @@ local tiny = require "treagine.lib.tiny"
 local vector = require "treagine.lib.vector"
 local mathutils = require "treagine.util.mathutils"
 
-local RenderSystem = tiny.sortedProcessingSystem(class("RenderSystem"))
+local System = require "treagine.system.system"
+
+local RenderSystem = tiny.sortedProcessingSystem(System:extend("RenderSystem"))
 
 local function sortThenRender(self, e, dt, pixelScale)
 	local orderedList = {}

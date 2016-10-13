@@ -3,7 +3,9 @@ local class = require "treagine.lib.30log"
 local beholder = require "treagine.lib.beholder"
 local vector = require "treagine.lib.vector"
 
-local UIConstraintSystem = tiny.processingSystem(class("UIConstraintSystem"))
+local System = require "treagine.system.system"
+
+local UIConstraintSystem = tiny.processingSystem(System:extend("UIConstraintSystem"))
 
 function UIConstraintSystem:init(screen)
 	self.screen = screen

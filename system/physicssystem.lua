@@ -5,7 +5,9 @@ local beholder = require "treagine.lib.beholder"
 local bump = require "treagine.lib.bump"
 local vector = require "treagine.lib.vector"
 
-local PhysicsSystem = tiny.system(class("PhysicsSystem"))
+local System = require "treagine.system.system"
+
+local PhysicsSystem = tiny.system(System:extend("PhysicsSystem"))
 
 local COLLISION_EVENT = "COLLISION_EVENT"
 local ACCEL_EVENT = "SET_ACCELERATION"
