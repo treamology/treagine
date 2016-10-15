@@ -15,6 +15,7 @@ function animutil.importAnimations(name)
 	else
 		-- load up the json and decode it, then cache it
 		local rawJSON = love.filesystem.read("assets/sprites/data/" .. name .. ".json")
+		assert(rawJSON ~= nil, "Could not read the JSON file for " .. name)
 		animData = json:decode(rawJSON)
 		animDataCache[name] = animData
 		fromCache = false
@@ -51,6 +52,7 @@ function animutil.importAnimations(name)
 	-- support for multiple grids can be added later.
 	local frameSize = vector(animData.frameData[1].w, animData.frameData[2].h)
 	local image = love.graphics.newImage("assets/sprites/" .. name .. ".png")
+	assert(image ~= nil, "Could not read the image for " .. name)
 	local grid = anim8.newGrid(frameSize.x, frameSize.y, image:getDimensions())
 
 	local function createDurations(from, to)
