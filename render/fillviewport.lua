@@ -74,6 +74,20 @@ function FillViewport:projectLight(x, y)
 	return rx, ry
 end
 
+function FillViewport:unprojectLight(x, y)
+	x = x - self.position.x
+	y = y - self.position.y
+
+	x = x / gameconfig.render.scaleFactor / self.scale
+	y = y / gameconfig.render.scaleFactor / self.scale
+
+	if self.camera then
+		x, y = self.camera:worldCoords(x, y)
+	end
+
+	return x, y
+end
+
 function FillViewport:projectScale(scale)
 	scale = scale * gameconfig.render.scaleFactor * self.scale
 	return scale
