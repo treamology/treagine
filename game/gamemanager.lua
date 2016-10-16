@@ -12,6 +12,9 @@ local FillViewport = require "treagine.render.fillviewport"
 local GameManager = class("GameManager")
 
 function GameManager:init(name)
+	-- Perform fixes for retina.
+	require "treagine.util.retinafixes"
+
 	--- Name of the game that appears in the titlebar.
 	-- @ivar gameName
 	self.gameName = name or "Game"

@@ -27,6 +27,9 @@ function DebugDrawSystem:init(screen)
 end
 
 function DebugDrawSystem:draw()
+	love.graphics.push()
+	love.graphics.scale(love.window.getPixelScale(), love.window.getPixelScale())
+
 	if not self.screen.world then return end
 	love.graphics.setBlendMode("alpha")
 
@@ -144,6 +147,8 @@ function DebugDrawSystem:draw()
 	for k, v in pairs(self.pointList) do
 		self.pointList[k] = nil
 	end
+
+	love.graphics.pop()
 end
 
 function DebugDrawSystem:addRectangle(rect)

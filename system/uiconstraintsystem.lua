@@ -15,15 +15,13 @@ function UIConstraintSystem:init(screen)
 end
 
 function UIConstraintSystem:process(e, dt)
-	local cw, ch, camx, camy, pixelScale
+	local cw, ch, camx, camy
 	if e.renderOnScreen then
 		cw, ch = love.graphics.getWidth(), love.graphics.getHeight()
 		camx, camy = 0, 0
-		pixelScale = love.window.getPixelScale()
 	else
 		cw, ch = self.screen.canvas:getDimensions()
 		camx, camy = self.screen.camera.x - cw / 2, self.screen.camera.y - ch / 2
-		pixelScale = 1
 	end
 
 	if e.resizeToFullscreen then
@@ -33,8 +31,8 @@ function UIConstraintSystem:process(e, dt)
 	end
 
 	local x, y = cw * e.uiAnchorPoint.x, ch * e.uiAnchorPoint.y
-	x = x + e.uiOffset.x * pixelScale + camx
-	y = y + e.uiOffset.y * pixelScale + camy
+	x = x + e.uiOffset.x + camx
+	y = y + e.uiOffset.y + camy
 
 	e.position.x = x
 	e.position.y = y

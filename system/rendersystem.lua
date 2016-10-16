@@ -39,12 +39,10 @@ function RenderSystem:onAdd(e)
 	end
 end
 
-function RenderSystem:drawRenderable(e, r, dt, pixelScale)
+function RenderSystem:drawRenderable(e, r, dt)
 	if r.hidden then
 		return
 	end
-
-	local pixelScale = pixelScale or 1
 
 	love.graphics.setColor(r.color or e.color or 255, 255, 255, 255)
 
@@ -83,8 +81,6 @@ function RenderSystem:drawRenderable(e, r, dt, pixelScale)
 	local anchorX, anchorY = r.anchor.x, r.anchor.y
 	local rotation = r.rotation
 
-	local eScaleX, eScaleY = eScaleX * pixelScale, eScaleY * pixelScale
-	--local scaleX, scaleY = scaleX * pixelScale, scaleY * pixelScale
 	local offsetX, offsetY = offsetX * eScaleX, offsetY * eScaleY
 
 	if r.currentAnimation then
@@ -145,6 +141,9 @@ end
 function RenderSystem:postProcess(dt)
 	self.screen.camera:detach()
 
+	love.graphics.push()
+	love.graphics.scale(love.window.getPixelScale(), love.window.getPixelScale())
+
 	love.graphics.setCanvas()
 	love.graphics.setBlendMode("alpha", "premultiplied")
 
@@ -155,12 +154,14 @@ function RenderSystem:postProcess(dt)
 	love.graphics.setBlendMode("alpha")
 
 	for _, e in ipairs(self.offCanvasRenders) do
-		sortThenRender(self, e, dt, love.window.getPixelScale())
+		sortThenRender(self, e, dt)
 	end
 
 	for k in ipairs(self.offCanvasRenders) do
 		self.offCanvasRenders[k] = nil
 	end
+
+	love.graphics.pop()
 end
 
 function RenderSystem:compare(e1, e2)
