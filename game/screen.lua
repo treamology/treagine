@@ -4,6 +4,7 @@ local Camera = require "treagine.lib.camera"
 
 local RenderSystem = require "treagine.system.rendersystem"
 local UpdateSystem = require "treagine.system.updatesystem"
+local CanvasDrawSystem = require "treagine.system.canvasdrawsystem"
 
 local FillViewport = require "treagine.render.fillviewport"
 local gameconfig = require "treagine.config.gameconfig"
@@ -53,6 +54,7 @@ function Screen:load()
 	end
 
 	self.world:addSystem(UpdateSystem(self))
+	self.world:addSystem(CanvasDrawSystem(self))
 
 	local rs = RenderSystem(self)
 	self.world:addSystem(rs)
