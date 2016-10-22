@@ -23,7 +23,8 @@ function Screen:init(systems, canvas, viewport, camera)
 	self:setViewport(viewport or FillViewport())
 
 	self.canvas = canvas or love.graphics.newCanvas(love.graphics.getWidth(), love.graphics.getHeight())
-	self.camera = camera or Camera.new(self.canvas:getWidth(), self.canvas:getHeight())
+	self.canvasWidth, self.canvasHeight = self.canvas:getWidth(), self.canvas:getHeight()
+	self.camera = camera or Camera.new(self.canvasWidth, self.canvasHeight)
 
 	self.viewport.camera = self.camera
 
@@ -146,6 +147,13 @@ function Screen:getSystemByName(name)
 	-- 		return system
 	-- 	end
 	-- end
+end
+
+function Screen:isEntityInsideView(e)
+	return e.position.x < self.viewport.camera.x + self.canvasWidth / 2 and
+	       e.position.x > self.viewport.camera.x - self.canvasWidth / 2 and
+	       e.position.y < self.viewport.camera.y + self.canvasHeight / 2 and
+	       e.position.y > self.viewport.camera.y - self.canvasHeight / 2
 end
 
 function Screen:setViewport(viewport)
