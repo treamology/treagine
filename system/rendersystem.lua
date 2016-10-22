@@ -71,7 +71,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 
 		love.graphics.setShader(e.shader)
 	else
-		--love.graphics.setShader()
+		love.graphics.setShader()
 	end
 
 	local eScale = e.scale or vector(1, 1)
@@ -113,7 +113,6 @@ function RenderSystem:drawRenderable(e, r, dt)
 		end
 		love.graphics.print(r.text, e.position.x + offsetX, e.position.y + offsetY, rotation, scaleX * eScaleX, scaleY * eScaleY, anchorX, anchorY)
 		return
-		
 	end
 
 	love.graphics.draw(r.image or r.canvas or r.particleSystem, mathutils.round(e.position.x + offsetX), mathutils.round(e.position.y + offsetY), rotation, scaleX * eScaleX, scaleY * eScaleY, mathutils.round(anchorX), mathutils.round(anchorY))
