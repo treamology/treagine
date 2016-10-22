@@ -14,6 +14,7 @@ local ACCEL_EVENT = "SET_ACCELERATION"
 local STOP_MOVING_EVENT = "STOP_MOVING"
 local SET_POSITION = "SET_POSITION"
 local SET_VELOCITY = "SET_VELOCITY"
+local UPDATE_BOUNDS = "UPDATE_BOUNDS"
 
 function PhysicsSystem:init()
 	self.filter = tiny.requireAny("static",
@@ -41,6 +42,9 @@ function PhysicsSystem:init()
 	self.setVelocityEvent = beholder.observe(SET_VELOCITY, function(e, velocity, axis)
 		self:setVelocity(e, velocity, axis)
 	end)
+	self.updateBBEvent = beholder.observe(UPDATE_BOUNDS, function(e, boundingBox)
+		self:updateBoundingBox(e, boundingBox)
+	end)
 end
 
 function PhysicsSystem:onRemoveFromWorld(world)
@@ -48,6 +52,7 @@ function PhysicsSystem:onRemoveFromWorld(world)
 	beholder.stopObserving(self.stopMovingEvent)
 	beholder.stopObserving(self.setPositionEvent)
 	beholder.stopObserving(self.setVelocityEvent)
+	beholder.stopObserving(self.updateBBEvent)
 end
 
 function PhysicsSystem:onAdd(e)
@@ -248,10 +253,16 @@ function PhysicsSystem.filterCollision(item, other)
 	return "cross"
 end
 
+function PhysicsSystem:updateBoundingBox(e, boundingBox)
+	self.collWorld:update(e, e.position.x, e.position.y, boundingBox.width, boundingBox.height)
+	e.boundingBox = boundingBox
+end
+
 PhysicsSystem.COLLISION_EVENT = COLLISION_EVENT
 PhysicsSystem.ACCEL_EVENT = ACCEL_EVENT
 PhysicsSystem.STOP_MOVING_EVENT = STOP_MOVING_EVENT
 PhysicsSystem.SET_POSITION = SET_POSITION
 PhysicsSystem.SET_VELOCITY = SET_VELOCITY
+PhysicsSystem.UPDATE_BOUNDS = UPDATE_BOUNDS
 
 return PhysicsSystem
