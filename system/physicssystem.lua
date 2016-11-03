@@ -197,7 +197,30 @@ function PhysicsSystem:setVelocity(e, velocity, axis)
 	end
 end
 
-function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
+-- function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
+-- 	print("setAcceleration")
+-- 	if e.static then return end
+
+-- 	if not e.currentAccelRate then
+-- 		e.currentAccelRate = vector(0, 0)
+-- 	end
+-- 	if not e.targetVel then
+-- 		e.targetVel = vector(0, 0)
+-- 	end
+
+-- 	if not axis then
+-- 		e.currentAccelRate = accel
+-- 		e.targetVel = targetVel
+-- 	elseif axis == "x" then
+-- 		e.currentAccelRate.x = accel
+-- 		e.targetVel.x = targetVel
+-- 	elseif axis == "y" then
+-- 		e.currentAccelRate.y = accel
+-- 		e.targetVel.y = targetVel
+-- 	end
+-- end
+
+function PhysicsSystem:setAcceleration(e, accelX, accelY, targetVelX, targetVelY)
 	if e.static then return end
 
 	if not e.currentAccelRate then
@@ -207,16 +230,10 @@ function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
 		e.targetVel = vector(0, 0)
 	end
 
-	if not axis then
-		e.currentAccelRate = accel
-		e.targetVel = targetVel
-	elseif axis == "x" then
-		e.currentAccelRate.x = accel
-		e.targetVel.x = targetVel
-	elseif axis == "y" then
-		e.currentAccelRate.y = accel
-		e.targetVel.y = targetVel
-	end
+	e.currentAccelRate.x = accelX
+	e.currentAccelRate.y = accelY
+	e.targetVel.x = targetVelX
+	e.targetVel.y = targetVelY
 end
 
 function PhysicsSystem:stopMoving(e, axis)
