@@ -30,8 +30,8 @@ function PhysicsSystem:init()
 	self.prevPositions = {}
 	self.currentPositions = {}
 
-	self.accelEvent = beholder.observe(ACCEL_EVENT, function(e, accelRate, targetVelocity, axis)
-		self:setAcceleration(e, accelRate, targetVelocity, axis)
+	self.accelEvent = beholder.observe(ACCEL_EVENT, function(e, accelX, accelY, targetVelX, targetVelY)
+		self:setAcceleration(e, accelX, accelY, targetVelX, targetVelY)
 	end)
 	self.stopMovingEvent = beholder.observe(STOP_MOVING_EVENT, function(e, axis)
 		self:stopMoving(e, axis)
