@@ -64,6 +64,9 @@ function PhysicsSystem:onAdd(e)
 	self.collisions[e] = {}
 
 	self.currentPositions[e] = e.position:clone()
+
+	e.targetVel = vector(0, 0)
+	e.currentAccelRate = vector(0, 0)
 end
 
 function PhysicsSystem:onRemove(e)
@@ -179,46 +182,17 @@ function PhysicsSystem:process(e, dt)
 	end
 end
 
-function PhysicsSystem:setVelocity(e, velocity, axis)
+function PhysicsSystem:setVelocity(e, velocityX, velocityY)
 	if e.static then return end
 
-	e.currentAccelRate = vector(0, 0)
+	e.currentAccelRate.x = 0
+	e.currentAccelRate.y = 0
 
-	if not e.targetVel then
-		e.targetVel = vector(0, 0)
-	end
-
-	if vector.isvector(velocity) then
-		e.targetVel = velocity
-		e.velocity = velocity
-	else
-		e.targetVel[axis] = velocity
-		e.velocity[axis] = velocity
-	end
+	e.velocity.x = velocityX
+	e.velocity.y = velocityY
+	e.targetVel.x = velocityX
+	e.targetVel.y = velocityY
 end
-
--- function PhysicsSystem:setAcceleration(e, accel, targetVel, axis)
--- 	print("setAcceleration")
--- 	if e.static then return end
-
--- 	if not e.currentAccelRate then
--- 		e.currentAccelRate = vector(0, 0)
--- 	end
--- 	if not e.targetVel then
--- 		e.targetVel = vector(0, 0)
--- 	end
-
--- 	if not axis then
--- 		e.currentAccelRate = accel
--- 		e.targetVel = targetVel
--- 	elseif axis == "x" then
--- 		e.currentAccelRate.x = accel
--- 		e.targetVel.x = targetVel
--- 	elseif axis == "y" then
--- 		e.currentAccelRate.y = accel
--- 		e.targetVel.y = targetVel
--- 	end
--- end
 
 function PhysicsSystem:setAcceleration(e, accelX, accelY, targetVelX, targetVelY)
 	if e.static then return end
