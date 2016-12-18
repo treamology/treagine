@@ -125,6 +125,7 @@ end
 local function extractEventAndCallbackFromParams(params)
   assert(#params > 0, "beholder.observe requires at least one parameter - the callback. You usually want to use two, i.e.: beholder.observe('EVENT', callback)")
   local callback = table.remove(params, #params)
+  assert(params[1] ~= nil, "the first parameter really shouldn't be nil.")
   return params, callback
 end
 
