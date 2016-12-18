@@ -29,8 +29,8 @@ function mathutils.radiansToHeading(radians)
 	return vector(x, y)
 end
 
-function mathutils.headingToRadians(heading)
-	return math.atan2(heading.y, heading.x)
+function mathutils.headingToRadians(headingX, headingY)
+	return math.atan2(-headingY, headingX)
 end
 
 function mathutils.pointInsideRect(x, y, boundX, boundY, boundW, boundH)
