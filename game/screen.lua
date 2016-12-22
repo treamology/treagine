@@ -1,6 +1,7 @@
 local class = require "treagine.lib.30log"
 local tiny = require "treagine.lib.tiny"
 local Camera = require "treagine.lib.camera"
+local beholder = require "treagine.lib.beholder"
 
 local RenderSystem = require "treagine.system.rendersystem"
 local UpdateSystem = require "treagine.system.updatesystem"
@@ -15,6 +16,8 @@ local probe
 if gameconfig.profileMode then
 	probe = require "treagine.lib.probe"
 end
+
+local WINDOW_RESIZE = "WINDOW_RESIZE"
 
 function Screen:init(systems, canvas, viewport, camera)
 	self.backgroundColor = {0, 0, 0, 0}
@@ -134,6 +137,8 @@ end
 
 function Screen:resize(w, h)
 	self.viewport:recalculate()
+
+	beholder.trigger("WINDOW_RESIZE", w, h)
 end
 
 function Screen:getSystemByName(name)
@@ -160,5 +165,7 @@ function Screen:setViewport(viewport)
 	self.viewport = viewport
 	self.viewport:recalculate()
 end
+
+Screen.WINDOW_RESIZE = WINDOW_RESIZE
 
 return Screen
