@@ -17,4 +17,16 @@ function UpdateSystem:process(e, dt)
 	e:update(dt, self.screen)
 end
 
+function UpdateSystem:onRemove(e)
+	if e.onRemove then
+		e:onRemove()
+	end
+end
+
+function UpdateSystem:onAdd(e)
+	if e.onAdd then
+		e:onAdd()
+	end
+end
+
 return UpdateSystem
