@@ -171,10 +171,10 @@ function PhysicsSystem:process(e, dt)
 			-- object could have been deleted by collision event
 			if self.collisions[coll.other] == nil then return end
 
-			-- if self.collisions[coll.other][e] == nil then
-			-- 	beholder.trigger(COLLISION_EVENT, coll.other, coll.type, coll.item, justHit)
-			-- end
-			-- if self.collisions[e] == nil then return end
+			if self.collisions[coll.other][e] == nil then
+				beholder.trigger(COLLISION_EVENT, coll.other, coll.type, coll.item, justHit)
+			end
+			if self.collisions[e] == nil then return end
 
 			self.collisions[e][coll.other] = coll
 			self.collisions[e][coll.other].clear = false
