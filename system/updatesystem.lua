@@ -10,11 +10,13 @@ local UpdateSystem = tiny.processingSystem(System:extend("UpdateSystem"))
 function UpdateSystem:init(screen)
 	self.screen = screen
 
-	self.filter = tiny.requireAll("update")
+	self.filter = tiny.requireAny("update", "onRemove", "onAdd")
 end
 
 function UpdateSystem:process(e, dt)
-	e:update(dt, self.screen)
+	if e.update then
+		e:update(dt, self.screen)
+	end
 end
 
 function UpdateSystem:onRemove(e)
