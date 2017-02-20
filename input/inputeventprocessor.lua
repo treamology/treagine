@@ -8,6 +8,7 @@ local inputs = {}
 local eventState = {}
 
 local INPUT_EVENT = "INPUT_EVENT"
+local INPUT_EVENT_PRESSED = "INPUT_EVENT_PRESSED"
 local TRIGGER_EVENT = "TRIGGER_EVENT"
 
 function InputEventProcessor.init(input)
@@ -21,6 +22,9 @@ end
 function InputEventProcessor.update()
 	for k, v in pairs(inputs) do
 		if kp.keyState[v] ~= nil then
+			if kp.keyState[v] == true then
+				beholder.trigger(INPUT_EVENT_PRESSED, k)
+			end
 			beholder.trigger(INPUT_EVENT, k)
 			eventState[k] = true
 		else
@@ -49,6 +53,7 @@ end
 InputEventProcessor.eventState = eventState
 
 InputEventProcessor.INPUT_EVENT = INPUT_EVENT
+InputEventProcessor.INPUT_EVENT_PRESSED = INPUT_EVENT_PRESSED
 InputEventProcessor.TRIGGER_EVENT = TRIGGER_EVENT
 
 return InputEventProcessor

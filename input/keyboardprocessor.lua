@@ -3,6 +3,7 @@ local beholder = require "treagine.lib.beholder"
 local KeyboardProcessor = {}
 
 local keyState = {}
+local prevKeyState = {}
 
 local KEY_PRESSED = "KEY_PRESSED"
 local KEY_HELD = "KEY_HELD"
@@ -19,10 +20,16 @@ function KeyboardProcessor.keyReleased(scancode)
 end
 
 function KeyboardProcessor.update()
-	for k in pairs(KeyboardProcessor.keyState) do
+	for k in pairs(keyState) do
 		beholder.trigger(KEY_HELD, k)
 
-		keyState[k] = false
+		if prevKeyState[k] and keyState[k] then
+			keyState[k] = false
+		end
+	end
+
+	for k in pairs(keyState) do
+		prevKeyState[k] = keyState[k]
 	end
 end
 
