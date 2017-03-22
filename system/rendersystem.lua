@@ -40,6 +40,7 @@ function RenderSystem:onAdd(e)
 end
 
 function RenderSystem:drawRenderable(e, r, dt)
+	if r.preDraw then r.preDraw() end
 	if r.hidden then
 		return
 	end
@@ -92,6 +93,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 
 		if not self.screen.paused or playAnim then r.currentAnimation:update(dt) end
 		r.currentAnimation:draw(r.image, mathutils.round(e.position.x + offsetX), mathutils.round(e.position.y + offsetY), rotation, scaleX, scaleY, anchorX, anchorY)
+		if r.postDraw then r:postDraw() end
 		return
 
 	elseif r.image then
@@ -104,6 +106,7 @@ function RenderSystem:drawRenderable(e, r, dt)
 	elseif r.drawMode then
 		anchorX, anchorY = r.size.x * -anchorX, r.size.y * -anchorY
 		love.graphics.rectangle(r.drawMode, mathutils.round(e.position.x + offsetX + anchorX), mathutils.round(e.position.y + offsetY + anchorY), r.size.x, r.size.y)
+		if r.postDraw then r:postDraw() end
 		return
 	
 	elseif r.font and r.text then
@@ -112,10 +115,12 @@ function RenderSystem:drawRenderable(e, r, dt)
 			love.graphics.setFont(r.font)
 		end
 		love.graphics.print(r.text, e.position.x + offsetX, e.position.y + offsetY, rotation, scaleX * eScaleX, scaleY * eScaleY, anchorX, anchorY)
+		if r.postDraw then r:postDraw() end
 		return
 	end
 
 	love.graphics.draw(r.image or r.canvas or r.particleSystem, mathutils.round(e.position.x + offsetX), mathutils.round(e.position.y + offsetY), rotation, scaleX * eScaleX, scaleY * eScaleY, mathutils.round(anchorX), mathutils.round(anchorY))
+	if r.postDraw then r:postDraw() end
 end
 
 function RenderSystem:preProcess(dt)
