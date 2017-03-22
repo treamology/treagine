@@ -21,7 +21,8 @@ function UIConstraintSystem:process(e, dt)
 		camx, camy = 0, 0
 	else
 		cw, ch = self.screen.canvas:getDimensions()
-		camx, camy = self.screen.camera.x - cw / 2, self.screen.camera.y - ch / 2
+		--camx, camy = self.screen.camera.x - cw / 2, self.screen.camera.y - ch / 2
+		camx, camy = self.screen.viewport:unprojectLight(0, 0)
 	end
 
 	if e.resizeToFullscreen then
